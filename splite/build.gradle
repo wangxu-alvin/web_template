@@ -1,0 +1,43 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'war'
+
+repositories {
+    maven {
+		credentials {
+				username username
+				password password
+		}
+		url 'http://localhost/archiva/repository/my_repo/'
+	}
+}
+
+dependencies {
+	compile (
+	'org.apache.poi:poi:3.9', 
+	'org.apache.poi:poi-ooxml:3.9', 
+	'org.springframework:spring-webmvc:3.2.0.RELEASE',
+	'org.springframework:spring-orm:3.2.1.RELEASE',
+	'org.springframework:spring-jdbc:3.2.1.RELEASE',
+	'javax.servlet:javax.servlet-api:3.0.1',
+	'commons-fileupload:commons-fileupload:1.2.2',
+	'commons-io:commons-io:1.3.2',
+	'org.hibernate:hibernate-validator:4.3.0.Final',
+	'org.codehaus.jackson:jackson-core-asl:1.9.12',
+	'org.codehaus.jackson:jackson-mapper-asl:1.9.12',
+	'com.j256.ormlite:ormlite-jdbc:4.45',
+	'org.slf4j:slf4j-api:1.7.2',
+	'log4j:log4j:1.2.17'
+	)
+	runtime(
+	'mysql:mysql-connector-java:5.1.6',
+	'jstl:jstl:1.2'
+	)
+}
+
+webAppDirName="WebContent"
+
+task copyToLib(type: Copy) {
+    into "c:/lib"
+    from configurations.runtime
+}
