@@ -8,7 +8,7 @@ repositories {
 				username username
 				password password
 		}
-		url 'http://localhost/archiva/repository/my_repo/'
+		url url
 	}
 }
 
@@ -26,8 +26,7 @@ dependencies {
 	'org.codehaus.jackson:jackson-core-asl:1.9.12',
 	'org.codehaus.jackson:jackson-mapper-asl:1.9.12',
 	'com.j256.ormlite:ormlite-jdbc:4.45',
-	'org.slf4j:slf4j-api:1.7.2',
-	'log4j:log4j:1.2.17'
+	'ch.qos.logback:logback-classic:1.0.12'
 	)
 	runtime(
 	'mysql:mysql-connector-java:5.1.6',
