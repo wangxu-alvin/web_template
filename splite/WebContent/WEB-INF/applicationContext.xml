@@ -22,6 +22,25 @@
 		<property name="username" value="${username}" />
 		<property name="password" value="${password}" />
 	</bean>
+	
+	<!-- our daos -->
+	<bean id="userDao" class="com.j256.ormlite.spring.DaoFactory"
+		factory-method="createDao">
+		<constructor-arg index="0" ref="connectionSource" />
+		<constructor-arg index="1" value="net.vicp.dgiant.entry.common.User" />
+	</bean>
+	
+	<bean id="roleDao" class="com.j256.ormlite.spring.DaoFactory"
+		factory-method="createDao">
+		<constructor-arg index="0" ref="connectionSource" />
+		<constructor-arg index="1" value="net.vicp.dgiant.entry.common.Role" />
+	</bean>
+	
+	<bean id="userRoleDao" class="com.j256.ormlite.spring.DaoFactory"
+		factory-method="createDao">
+		<constructor-arg index="0" ref="connectionSource" />
+		<constructor-arg index="1" value="net.vicp.dgiant.entry.common.UserRole" />
+	</bean>
 
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
