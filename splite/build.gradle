@@ -3,13 +3,7 @@ apply plugin: 'eclipse'
 apply plugin: 'war'
 
 repositories {
-    maven {
-		credentials {
-				username 'admin'
-				password 'canihelpyou123'
-		}
-		url 'http://10.80.200.84:8081/archiva/repository/nds-test/'
-	}
+    mavenCentral()
 }
 
 dependencies {
