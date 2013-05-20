@@ -19,7 +19,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:applicationContext.xml")
+@ContextConfiguration(locations = "classpath:test-spring-configuration.xml")
 public class UserServiceTest extends AbstractJUnit4SpringContextTests {
 
 	@Autowired
