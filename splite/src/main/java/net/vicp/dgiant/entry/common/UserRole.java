@@ -7,15 +7,15 @@ import com.j256.ormlite.table.DatabaseTable;
 public class UserRole {
 	
 	@DatabaseField(generatedId = true)
-	int id;
+	private int id;
 
 	@DatabaseField(foreign = true, columnName = "user_id")
-	User user;
+	private User user;
 
 	@DatabaseField(foreign = true, columnName = "role_id")
-	Role role;
+	private Role role;
 
-	UserRole() {
+	public UserRole() {
 		// for ormlite
 	}
 
