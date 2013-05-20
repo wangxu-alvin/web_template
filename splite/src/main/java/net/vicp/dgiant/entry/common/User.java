@@ -9,7 +9,7 @@ public class User {
 	@DatabaseField(generatedId=true)
 	private int id;
 	
-	@DatabaseField
+	@DatabaseField()
 	private String name;
 	
 	@DatabaseField
@@ -17,6 +17,18 @@ public class User {
 	
 	@DatabaseField
 	private String email;
+	
+	public User()
+	{
+		
+	}
+	
+	public User (String name, String password, String email)
+	{
+		this.name = name;
+		this.password = password;
+		this.email = email;
+	}
 	
 	public int getId() {
 		return id;
@@ -48,5 +60,11 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", password=" + password
+				+ ", email=" + email + "]";
 	}
 }
