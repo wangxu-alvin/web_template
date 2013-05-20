@@ -5,10 +5,10 @@ apply plugin: 'war'
 repositories {
     maven {
 		credentials {
-				username username
-				password password
+				username 'admin'
+				password 'canihelpyou123'
 		}
-		url url
+		url 'http://10.80.200.84:8081/archiva/repository/nds-test/'
 	}
 }
 
@@ -31,6 +31,9 @@ dependencies {
 	runtime(
 	'mysql:mysql-connector-java:5.1.6',
 	'jstl:jstl:1.2'
+	)
+	testCompile (
+	'org.testng:testng:6.1.1'
 	)
 }
 
