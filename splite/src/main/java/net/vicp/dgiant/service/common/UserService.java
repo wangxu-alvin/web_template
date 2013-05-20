@@ -3,6 +3,8 @@ package net.vicp.dgiant.service.common;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import net.vicp.dgiant.entry.common.Role;
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.entry.common.UserRole;
@@ -19,11 +21,11 @@ public class UserService {
 
 	@Autowired
 	private JdbcConnectionSource connectionSource;
-
-	@Autowired
+	
+	@Resource(name="userDao")
 	private Dao<User, Integer> userDao;
 
-	@Autowired
+	@Resource(name="userRoleDao")
 	private Dao<UserRole, Integer> userRoleDao;
 
 	public int createUser(User user, Role...roles) throws SQLException {
