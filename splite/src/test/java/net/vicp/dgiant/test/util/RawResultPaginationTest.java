@@ -1,13 +1,11 @@
 package net.vicp.dgiant.test.util;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.annotation.Resource;
 
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.test.BaseTest;
-import net.vicp.dgiant.util.Pagination;
 import net.vicp.dgiant.util.RawResultPagination;
 import net.vicp.dgiant.util.RowMapper;
 
@@ -24,7 +22,7 @@ public class RawResultPaginationTest extends BaseTest {
 	@Resource
 	private Dao<User, Integer> userDao;
 	
-	private Pagination<User> pageination;
+	private RawResultPagination<User> pagination;
 	
 	@Before
 	public void setUp() throws SQLException
@@ -39,15 +37,24 @@ public class RawResultPaginationTest extends BaseTest {
 	@Test
 	public void getFooter() {
 		
-		pageination = new RawResultPagination<User>(1, 50, "link", userDao);
-		Assert.assertEquals("Previous  1  <a href=link?page=2>Next</a>", pageination.getFooter());
+		pagination = new RawResultPagination<User>(1, 50, "link", userDao);
+		pagination.execute(new RowMapper<User>() {
+			@Override
+			public User mapRow(DatabaseResults rs) throws SQLException{
+				User user = new User();
+				user.setId(rs.getInt(0));
+				user.setName(rs.getString(1));
+				return user;
+			}
+		});
+		Assert.assertEquals("Previous  1  <a href=link?page=2>Next</a>", pagination.getFooter());
 		
 	}
 	
 	@Test
 	public void query() {
-		pageination = new RawResultPagination<User>(2, 50, "link", userDao);
-		List<User> users = pageination.query(new RowMapper<User>() {
+		pagination = new RawResultPagination<User>(2, 50, "link", userDao);
+		pagination.execute(new RowMapper<User>() {
 			@Override
 			public User mapRow(DatabaseResults rs) throws SQLException{
 				User user = new User();
@@ -57,11 +64,11 @@ public class RawResultPaginationTest extends BaseTest {
 			}
 		});
 		
-		Assert.assertEquals("user51", users.get(0).getName());
-		Assert.assertEquals(50, users.size());
+		Assert.assertEquals("user51", pagination.getData().get(0).getName());
+		Assert.assertEquals(50, pagination.getData().size());
 		
-		pageination = new RawResultPagination<User>(4, 25, "link", userDao);
-		users = pageination.query(new RowMapper<User>() {
+		pagination = new RawResultPagination<User>(4, 25, "link", userDao);
+		pagination.execute(new RowMapper<User>() {
 			@Override
 			public User mapRow(DatabaseResults rs) throws SQLException{
 				User user = new User();
@@ -71,12 +78,12 @@ public class RawResultPaginationTest extends BaseTest {
 			}
 		});
 		
-		Assert.assertEquals("user76", users.get(0).getName());
-		Assert.assertEquals(25, users.size());
+		Assert.assertEquals("user76", pagination.getData().get(0).getName());
+		Assert.assertEquals(25, pagination.getData().size());
 		
 		
-		pageination = new RawResultPagination<User>(5, 21, "link", userDao);
-		users = pageination.query(new RowMapper<User>() {
+		pagination = new RawResultPagination<User>(5, 21, "link", userDao);
+		pagination.execute(new RowMapper<User>() {
 			@Override
 			public User mapRow(DatabaseResults rs) throws SQLException{
 				User user = new User();
@@ -86,8 +93,8 @@ public class RawResultPaginationTest extends BaseTest {
 			}
 		});
 		
-		Assert.assertEquals("user85", users.get(0).getName());
-		Assert.assertEquals(16, users.size());
+		Assert.assertEquals("user85", pagination.getData().get(0).getName());
+		Assert.assertEquals(16, pagination.getData().size());
 	}
 	
 	@After

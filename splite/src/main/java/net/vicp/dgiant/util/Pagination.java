@@ -6,6 +6,6 @@ public interface Pagination<T> {
 	
 	public String getFooter();
 	
-	public List<T> query(RowMapper<T> rowMapper);
+	public List<T> getData();
 	
 }

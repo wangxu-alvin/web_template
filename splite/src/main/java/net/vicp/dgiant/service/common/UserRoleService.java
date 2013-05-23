@@ -8,13 +8,16 @@ import javax.annotation.Resource;
 import net.vicp.dgiant.entry.common.Role;
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.entry.common.UserRole;
+import net.vicp.dgiant.util.Pagination;
+import net.vicp.dgiant.util.RawResultPagination;
+import net.vicp.dgiant.util.RowMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.DatabaseResults;
@@ -107,12 +110,50 @@ public class UserRoleService {
 		return userDao.queryForId(id);
 	}
 
+	/**
+	 * This is a common query by user name
+	 * @param name query condition
+	 * @return all the related users
+	 * @throws SQLException
+	 */
 	public List<User> queryUsersByName(String name) throws SQLException {
 
 		logger.info("queryUsersByName : {} ", name);
 
-		return userDao.query(userDao.queryBuilder().orderBy("id", true).where()
-				.like("name", "%" + name + "%").prepare());
+		return userDao.query(prepareNameQuery(name));
+	}
+	
+	/**
+	 * This is a paginated query by user name
+	 * @param name name query condition
+	 * @param pageNum requested page number
+	 * @param pageCapacity the size of showing in one page
+	 * @param url foot links for pages, such as previous page, next page
+	 * @return a page of users
+	 * @throws SQLException
+	 */
+	public Pagination<User> queryUsersByName(String name, int pageNum,
+			int pageCapacity, String url) throws SQLException {
+		
+		RawResultPagination<User> pagination = new RawResultPagination<User>(pageNum,
+				pageCapacity, url, userDao, prepareNameQuery(name));
+		pagination.execute(new RowMapper<User>() {
+			@Override
+			public User mapRow(DatabaseResults rs) throws SQLException{
+				User user = new User();
+				user.setId(rs.getInt(0));
+				user.setName(rs.getString(1));
+				return user;
+			}
+		});
+		
+		return pagination;
+	}
+	
+	private PreparedQuery<User> prepareNameQuery(String name) throws SQLException
+	{
+		return userDao.queryBuilder().orderBy("id", true).where()
+				.like("name", "%" + name + "%").prepare();
 	}
 
 	public List<User> queryUsersByEmail(String email) throws SQLException {
@@ -232,16 +273,5 @@ public class UserRoleService {
 			// remove the role
 			roleDao.deleteById(roleId);
 		}
-	}
-	
-	public DatabaseResults queryPaginatedUsers(int offset) throws SQLException {
-		CloseableIterator<User> iterator = userDao.iterator(userDao.queryBuilder()
-				.orderBy("id", true).prepare());
-		DatabaseResults drs = iterator.getRawResults();
-		drs.moveRelative(offset);
-		
-		iterator.close();
-		
-		return drs;
 	}
 }

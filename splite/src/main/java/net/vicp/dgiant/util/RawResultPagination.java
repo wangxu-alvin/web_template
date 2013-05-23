@@ -27,6 +27,10 @@ public class RawResultPagination<T> implements Pagination<T> {
 
 	private PreparedQuery<T> pq;
 
+	private List<T> results;
+	
+	private String footer;
+
 	public RawResultPagination(int requestedPage, int pageCapacity, String url,
 			Dao<T, Integer> dao, PreparedQuery<T> pq) {
 
@@ -39,6 +43,8 @@ public class RawResultPagination<T> implements Pagination<T> {
 
 		this.dao = dao;
 		this.pq = pq;
+
+		results = new ArrayList<T>(pageCapacity);
 	}
 
 	public RawResultPagination(int requestedPage, int pageCapacity, String url,
@@ -46,43 +52,25 @@ public class RawResultPagination<T> implements Pagination<T> {
 
 		this(requestedPage, pageCapacity, url, dao, null);
 	}
-
+	
 	@Override
 	public String getFooter() {
 
-		long amount = 0;
-
-		try {
-			amount = (pq == null ? dao.countOf() : dao.countOf(pq));
-		} catch (SQLException e) {
-			logger.error(e.getMessage());
-			return "";
-		}
-
-		long pageSize = (amount / pageCapacity)
-				+ ((amount % pageCapacity) > 0 ? 1 : 0);
-
-		if (requestedPage > pageSize || requestedPage <= 0) {
-
-			logger.error("requestedPage[{}] is not between 0 and pageSize[{}]",
-					requestedPage, pageSize);
-			return "";
-		}
-
-		StringBuffer sbFooter = new StringBuffer();
-		sbFooter.append(requestedPage == 1 ? "Previous" : url(
-				requestedPage - 1, "Previous"));
-		sbFooter.append("  " + requestedPage + "  ");
-		sbFooter.append(requestedPage == pageSize ? "Next" : url(
-				requestedPage + 1, "Next"));
-
-		return sbFooter.toString();
+		return footer;
 	}
 
 	@Override
-	public List<T> query(RowMapper<T> rowMapper) {
+	public List<T> getData() {
 
-		List<T> results = new ArrayList<T>(pageCapacity);
+		return results;
+	}
+
+	public void execute(RowMapper<T> rowMapper) {
+		generateResult(rowMapper);
+		generateFooter();
+	}
+
+	private void generateResult(RowMapper<T> rowMapper) {
 		CloseableIterator<T> iterator = null;
 		DatabaseResults drs = null;
 
@@ -109,11 +97,36 @@ public class RawResultPagination<T> implements Pagination<T> {
 				iterator.closeQuietly();
 			}
 		}
-
-		return results;
 	}
 
-	//TODO need to be refined
+	private void generateFooter() {
+		long amount = 0;
+		try {
+			amount = (pq == null ? dao.countOf() : dao.countOf(pq));
+		} catch (SQLException e) {
+			logger.error(e.getMessage());
+		}
+
+		long pageSize = (amount / pageCapacity)
+				+ ((amount % pageCapacity) > 0 ? 1 : 0);
+
+		if (requestedPage > pageSize || requestedPage <= 0) {
+
+			logger.error("requestedPage[{}] is not between 0 and pageSize[{}]",
+					requestedPage, pageSize);
+		}
+
+		StringBuffer sbFooter = new StringBuffer();
+		sbFooter.append(requestedPage == 1 ? "Previous" : url(
+				requestedPage - 1, "Previous"));
+		sbFooter.append("  " + requestedPage + "  ");
+		sbFooter.append(requestedPage == pageSize ? "Next" : url(
+				requestedPage + 1, "Next"));
+		
+		footer = sbFooter.toString();
+	}
+
+	// TODO need to be refined
 	private String url(int page, String... mark) {
 		return "<a href=" + url + "?page=" + page + ">"
 				+ (mark.length == 0 ? " page " + page : mark[0]) + "</a>";
