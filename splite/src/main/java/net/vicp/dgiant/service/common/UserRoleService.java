@@ -129,7 +129,7 @@ public class UserRoleService {
 	 * @param pageNum requested page number
 	 * @param pageCapacity the size of showing in one page
 	 * @param url foot links for pages, such as previous page, next page
-	 * @return a page of users
+	 * @return Pagination.getData:a page of users, Pagination.getFooter:foot URL
 	 * @throws SQLException
 	 */
 	public Pagination<User> queryUsersByName(String name, int pageNum,
