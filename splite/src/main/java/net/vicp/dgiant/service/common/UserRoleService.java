@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import net.vicp.dgiant.entry.common.Role;
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.entry.common.UserRole;
+import net.vicp.dgiant.util.DataExpiredException;
 import net.vicp.dgiant.util.Pagination;
 import net.vicp.dgiant.util.RawResultPagination;
 import net.vicp.dgiant.util.RowMapper;
@@ -28,13 +29,13 @@ public class UserRoleService {
 	private Logger logger = (Logger) LoggerFactory
 			.getLogger(UserRoleService.class);
 
-	@Resource(name = "userDao")
+	@Resource
 	private Dao<User, Integer> userDao;
 
-	@Resource(name = "userRoleDao")
+	@Resource
 	private Dao<UserRole, Integer> userRoleDao;
 
-	@Resource(name = "roleDao")
+	@Resource
 	private Dao<Role, Integer> roleDao;
 
 	public void createUser(User user, int... roleIds) throws SQLException {
@@ -61,11 +62,16 @@ public class UserRoleService {
 		return userDao.queryForAll();
 	}
 
-	public void updateUser(User user) throws SQLException {
+	public void updateUser(User user) throws SQLException, DataExpiredException {
 
 		logger.info("update {} ", user.toString());
 		
-		userDao.update(user);
+		int result = userDao.update(user);
+		
+		if (result == 0)
+		{
+			throw new DataExpiredException("");
+		}
 	}
 
 	public void updateUserRoles(int userId, int... roleIds) throws SQLException {
@@ -135,19 +141,7 @@ public class UserRoleService {
 	public Pagination<User> queryUsersByName(String name, int pageNum,
 			int pageCapacity, String url) throws SQLException {
 		
-		RawResultPagination<User> pagination = new RawResultPagination<User>(pageNum,
-				pageCapacity, url, userDao, prepareNameQuery(name));
-		pagination.execute(new RowMapper<User>() {
-			@Override
-			public User mapRow(DatabaseResults rs) throws SQLException{
-				User user = new User();
-				user.setId(rs.getInt(0));
-				user.setName(rs.getString(1));
-				return user;
-			}
-		});
-		
-		return pagination;
+		return queryPaginatedUsers(pageNum, pageCapacity, url, prepareNameQuery(name));
 	}
 	
 	private PreparedQuery<User> prepareNameQuery(String name) throws SQLException
@@ -273,5 +267,22 @@ public class UserRoleService {
 			// remove the role
 			roleDao.deleteById(roleId);
 		}
+	}
+	
+	public Pagination<User> queryPaginatedUsers(int pageNum, int pageCapacity,
+			String url, PreparedQuery<User> condition) {
+		
+		RawResultPagination<User> pagination = new RawResultPagination<User>(pageNum,
+				pageCapacity, url, userDao, condition);
+		pagination.execute(new RowMapper<User>() {
+			@Override
+			public User mapRow(DatabaseResults rs) throws SQLException{
+				User user = new User();
+				user.setId(rs.getInt(0));
+				user.setName(rs.getString(1));
+				return user;
+			}
+		});
+		return pagination;
 	}
 }

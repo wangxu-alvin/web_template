@@ -1,5 +1,8 @@
 package net.vicp.dgiant.entry.common;
 
+import java.util.Date;
+
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -17,6 +20,9 @@ public class User {
 	
 	@DatabaseField
 	private String email;
+	
+	@DatabaseField(version = true, dataType = DataType.DATE_STRING)
+	private Date lastModified;
 	
 	public User()
 	{
@@ -60,6 +66,14 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 
 	@Override
