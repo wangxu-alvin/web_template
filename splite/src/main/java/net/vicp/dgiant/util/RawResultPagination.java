@@ -42,8 +42,8 @@ public class RawResultPagination<T> implements Pagination<T> {
 				pageCapacity);
 
 		this.dao = dao;
-		this.pq = pq;
 
+		this.pq = pq;
 		results = new ArrayList<T>(pageCapacity);
 	}
 

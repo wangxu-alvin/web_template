@@ -9,11 +9,11 @@ import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.entry.common.UserRole;
 import net.vicp.dgiant.service.common.UserRoleService;
 import net.vicp.dgiant.test.BaseTest;
+import net.vicp.dgiant.util.DataExpiredException;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,7 +41,7 @@ public class UserRoleServiceTest extends BaseTest {
 	}
 	
 	@Test
-	public void updateUser() throws SQLException {
+	public void updateUser() throws SQLException, DataExpiredException {
 		
 		User user = service.queryUserById(1);
 		user.setPassword("pwd1_modified");
@@ -53,6 +53,18 @@ public class UserRoleServiceTest extends BaseTest {
 		
 		Assert.assertEquals("pwd1_modified",
 				service.queryUserById(1).getPassword());
+	}
+	
+	@Test(expected=DataExpiredException.class)
+	public void testOptimisticLock() throws SQLException, DataExpiredException {
+		
+		User user = service.queryUserById(1);
+		user.setPassword("pwd1_modified");
+		
+		User anotherUser = service.queryUserById(1);
+		anotherUser.setEmail("QQ@163.com");
+		service.updateUser(anotherUser);
+		service.updateUser(user);
 	}
 	
 	@Test
@@ -96,7 +108,6 @@ public class UserRoleServiceTest extends BaseTest {
 	}
 	
 	@Test
-	@Ignore
 	public void deleteRoles() throws SQLException {
 		service.updateUserRoles(6, 5, 6, 7);
 		Assert.assertEquals(3, service.queryRolesByUserId(6).size());
