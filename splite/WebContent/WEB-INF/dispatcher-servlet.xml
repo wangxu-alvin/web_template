@@ -23,11 +23,32 @@
         <property name="basenames">  
             <list>  
                 <!-- main resources -->  
-                <value>classpath:validation</value>  
+                <value>classpath:message</value>  
+                <value>classpath:validation</value> 
             </list>  
         </property>  
     </bean>
     
+    <!-- for internationalization -->
+    <bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="zh_CN" />
+	</bean>
+ 
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="language" />
+	</bean>
+ 
+	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" >
+		<property name="interceptors">
+		   <list>
+			<ref bean="localeChangeInterceptor" />
+		   </list>
+		</property>
+	</bean>
+    
+    <!-- validation support -->
     <bean id="validator"  
 	    class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"  
 	    p:validationMessageSource-ref="messageSource">  
@@ -43,13 +64,5 @@
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
 		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 		
-	<bean id="configurationProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-          <list>
-            <value>WEB-INF/setting.properties</value>
-          </list>
-        </property>
-    </bean>
-        
 </beans>
 

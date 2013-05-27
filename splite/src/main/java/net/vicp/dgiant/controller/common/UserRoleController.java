@@ -7,13 +7,14 @@ import net.vicp.dgiant.validator.common.UserValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/user")
 public class UserRoleController {
 	
 	@Autowired
@@ -25,9 +26,20 @@ public class UserRoleController {
 		binder.setValidator(userValidator);
 	}
 	
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String addCustomer(@Valid User user) {
+	@RequestMapping(value = "/add")
+	public String addCustomer(@ModelAttribute("user") @Valid User user, BindingResult result) {
 		
-		return "index";
+		if (result.hasErrors())
+		{
+			System.out.println("------------------------");
+		}
+		
+		return "AddUser";
+	}
+	
+	@RequestMapping(value = "/init")
+	public String init(ModelMap model) {
+		model.addAttribute(new User("wangxu", "111", "sacat.wx@gmail.com"));
+		return "AddUser";
 	}
 }
