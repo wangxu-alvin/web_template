@@ -19,9 +19,7 @@
 </head>
  
 <body>
-	<h2>Language : <a href="?language=en">English</a>|<a href="?language=zh_CN">Chinese</a></h2>
- 
-	<form:form method="POST" modelAttribute="user" action="add.do">
+	<form:form method="POST" modelAttribute="user" action="add.jspa">
 		<form:errors path="*" cssClass="errorblock" element="div" />
 		<table>
 			<tr>

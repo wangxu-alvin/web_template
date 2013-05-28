@@ -35,7 +35,7 @@ public class RawResultPaginationTest extends BaseTest {
 	}
 	
 	@Test
-	public void getFooter() {
+	public void getFooter() throws SQLException {
 		
 		pagination = new RawResultPagination<User>(1, 50, "link", userDao);
 		pagination.execute(new RowMapper<User>() {
@@ -52,7 +52,7 @@ public class RawResultPaginationTest extends BaseTest {
 	}
 	
 	@Test
-	public void query() {
+	public void query() throws SQLException {
 		pagination = new RawResultPagination<User>(2, 50, "link", userDao);
 		pagination.execute(new RowMapper<User>() {
 			@Override

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.DatabaseResults;
 
 public class RawResultPagination<T> implements Pagination<T> {
@@ -25,14 +25,14 @@ public class RawResultPagination<T> implements Pagination<T> {
 
 	private Dao<T, Integer> dao;
 
-	private PreparedQuery<T> pq;
+	private QueryBuilder<T, Integer> builder;
 
 	private List<T> results;
 	
 	private String footer;
 
 	public RawResultPagination(int requestedPage, int pageCapacity, String url,
-			Dao<T, Integer> dao, PreparedQuery<T> pq) {
+			Dao<T, Integer> dao, QueryBuilder<T, Integer> builder) {
 
 		this.requestedPage = requestedPage;
 		this.pageCapacity = pageCapacity;
@@ -43,7 +43,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 
 		this.dao = dao;
 
-		this.pq = pq;
+		this.builder = builder;
 		results = new ArrayList<T>(pageCapacity);
 	}
 
@@ -65,19 +65,27 @@ public class RawResultPagination<T> implements Pagination<T> {
 		return results;
 	}
 
-	public void execute(RowMapper<T> rowMapper) {
-		generateResult(rowMapper);
+	public void execute(RowMapper<T> rowMapper) throws SQLException {
 		generateFooter();
+		generateResult(rowMapper);
 	}
 
-	private void generateResult(RowMapper<T> rowMapper) {
+	private void generateResult(RowMapper<T> rowMapper) throws SQLException {
 		CloseableIterator<T> iterator = null;
 		DatabaseResults drs = null;
 
 		try {
-			iterator = (pq == null ? dao.iterator() : dao.iterator(pq));
+			if (builder != null) {
+				builder.setCountOf(false);
+				iterator = dao.iterator(builder.prepare());
+			} else {
+				iterator = dao.iterator();
+			}
 			drs = iterator.getRawResults();
-			drs.moveAbsolute((requestedPage - 1) * pageCapacity);
+			if (requestedPage != 1)
+			{
+				drs.moveAbsolute((requestedPage - 1) * pageCapacity);
+			}
 
 			int count = 0;
 
@@ -88,6 +96,8 @@ public class RawResultPagination<T> implements Pagination<T> {
 		} catch (SQLException e) {
 
 			logger.error(e.getMessage());
+			
+			throw e;
 
 		} finally {
 			if (drs != null) {
@@ -99,21 +109,35 @@ public class RawResultPagination<T> implements Pagination<T> {
 		}
 	}
 
-	private void generateFooter() {
+	private void generateFooter() throws SQLException {
 		long amount = 0;
 		try {
-			amount = (pq == null ? dao.countOf() : dao.countOf(pq));
+			if (builder != null) {
+				builder.setCountOf(true);
+				amount = dao.countOf(builder.prepare());
+			} else {
+				amount = dao.countOf();
+			}
 		} catch (SQLException e) {
 			logger.error(e.getMessage());
+			throw e;
 		}
 
 		long pageSize = (amount / pageCapacity)
 				+ ((amount % pageCapacity) > 0 ? 1 : 0);
 
-		if (requestedPage > pageSize || requestedPage <= 0) {
+		if (requestedPage > pageSize) {
 
-			logger.error("requestedPage[{}] is not between 0 and pageSize[{}]",
+			logger.error("requestedPage[{}] is greater than pageSize[{}]",
 					requestedPage, pageSize);
+			requestedPage = new Long(pageSize).intValue();
+		}
+		
+		if (requestedPage <= 0) {
+
+			logger.error("requestedPage[{}] is improper",
+					requestedPage);
+			requestedPage = 1;
 		}
 
 		StringBuffer sbFooter = new StringBuffer();

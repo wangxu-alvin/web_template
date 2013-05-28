@@ -31,22 +31,13 @@
     
     <!-- for internationalization -->
     <bean id="localeResolver"
-		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-		<property name="defaultLocale" value="zh_CN" />
+		class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver">
 	</bean>
  
-	<bean id="localeChangeInterceptor"
-		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-		<property name="paramName" value="language" />
-	</bean>
- 
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" >
-		<property name="interceptors">
-		   <list>
-			<ref bean="localeChangeInterceptor" />
-		   </list>
-		</property>
-	</bean>
+ 	<mvc:interceptors>
+		<!-- This runs for all mappings -->
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+	</mvc:interceptors>
     
     <!-- validation support -->
     <bean id="validator"  

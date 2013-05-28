@@ -8,7 +8,7 @@
     </description>
     <display-name>splite</display-name>
     <welcome-file-list>
-        <welcome-file>/WEB-INF/jsp/index.jsp</welcome-file>
+        <welcome-file>listPage.jspa</welcome-file>
     </welcome-file-list>
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -26,7 +26,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
-        <url-pattern>*.do</url-pattern>
+        <url-pattern>*.jspa</url-pattern>
     </servlet-mapping>
     <filter>
         <filter-name>encodingFilter</filter-name>
