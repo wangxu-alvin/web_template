@@ -48,7 +48,8 @@ public class UserRoleController {
 	}
 
 	@RequestMapping(value = "/list")
-	public @ResponseBody List<User> list(String type, String condition) {
+	public @ResponseBody
+	List<User> list(String type, String condition) {
 
 		List<User> users = new ArrayList<User>();
 		try {
@@ -61,22 +62,24 @@ public class UserRoleController {
 	}
 
 	@RequestMapping(value = "/listPage")
-	public String listPage(Integer page, String type, String condition, 
+	public String listPage(Integer page, String type, String condition,
 			ModelMap map) {
-		
+
 		if (page == null) {
 			page = 1;
 		}
-		
+
 		try {
 			Pagination<User> pagination = null;
 			if (condition == null) {
-				pagination = service.queryPaginatedUsers(page, 10, "listPage.jspa");
+				pagination = service.queryPaginatedUsers(page, 10,
+						"listPage.jspa");
 			} else if ("name".equals(type)) {
-				pagination = service.queryUsersByName(condition, page, 10, "listPage.jspa");
-			}
-			else {
-				pagination = service.queryPaginatedUsers(page, 10, "listPage.jspa");
+				pagination = service.queryUsersByName(condition, page, 10,
+						"listPage.jspa");
+			} else {
+				pagination = service.queryPaginatedUsers(page, 10,
+						"listPage.jspa");
 			}
 			map.addAttribute("pageUsers", pagination.getData());
 			map.addAttribute("footer", pagination.getFooter());

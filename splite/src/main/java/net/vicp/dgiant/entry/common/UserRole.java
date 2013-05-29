@@ -3,9 +3,9 @@ package net.vicp.dgiant.entry.common;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName="user_role")
+@DatabaseTable(tableName = "user_role")
 public class UserRole {
-	
+
 	@DatabaseField(generatedId = true)
 	private int id;
 

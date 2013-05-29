@@ -21,7 +21,7 @@ public class UserValidator implements Validator {
 		ValidationUtils.rejectIfEmpty(errors, "password", "password.empty");
 		ValidationUtils.rejectIfEmpty(errors, "email", "email.empty");
 		User user = (User) target;
-		if(user.getEmail() != null && user.getEmail().indexOf("@") == -1) {
+		if (user.getEmail() != null && user.getEmail().indexOf("@") == -1) {
 			errors.rejectValue("email", "email.wrong.format");
 		}
 	}

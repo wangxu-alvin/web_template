@@ -40,7 +40,7 @@ public class UserRoleService {
 	public void createUser(User user, int... roleIds) throws SQLException {
 
 		userDao.create(user);
-		
+
 		logger.info("create {} ", user.toString());
 
 		if (roleIds != null) {
@@ -53,22 +53,21 @@ public class UserRoleService {
 			}
 		}
 	}
-	
+
 	public List<User> queryUsers() throws SQLException {
-		
+
 		logger.info("Users queryForAll");
-		
+
 		return userDao.queryForAll();
 	}
 
 	public void updateUser(User user) throws SQLException, DataExpiredException {
 
 		logger.info("update {} ", user.toString());
-		
+
 		int result = userDao.update(user);
-		
-		if (result == 0)
-		{
+
+		if (result == 0) {
 			throw new DataExpiredException("");
 		}
 	}
@@ -111,34 +110,41 @@ public class UserRoleService {
 	public User queryUserById(int id) throws SQLException {
 
 		logger.info("queryUserById : {} ", id);
-		
+
 		return userDao.queryForId(id);
 	}
 
 	/**
 	 * This is a common query by user name
-	 * @param name query condition
+	 * 
+	 * @param name
+	 *            query condition
 	 * @return all the related users
 	 * @throws SQLException
 	 */
 	public List<User> queryUsersByName(String name) throws SQLException {
 
 		logger.info("queryUsersByName : {} ", name);
-		
+
 		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
 		builder.selectColumns("name", "email");
 		builder.where().like("name", "%" + name + "%");
 		builder.orderBy("name", true);
-		
+
 		return userDao.query(builder.prepare());
 	}
-	
+
 	/**
 	 * This is a paginated query by user name
-	 * @param name name query condition
-	 * @param pageNum requested page number
-	 * @param pageCapacity the size of showing in one page
-	 * @param url foot links for pages, such as previous page, next page
+	 * 
+	 * @param name
+	 *            name query condition
+	 * @param pageNum
+	 *            requested page number
+	 * @param pageCapacity
+	 *            the size of showing in one page
+	 * @param url
+	 *            foot links for pages, such as previous page, next page
 	 * @return Pagination.getData:a page of users, Pagination.getFooter:foot URL
 	 * @throws SQLException
 	 */
@@ -163,7 +169,7 @@ public class UserRoleService {
 					}
 				});
 	}
-	
+
 	public List<User> queryUsersByEmail(String email) throws SQLException {
 
 		logger.info("queryUsersByEmail : {} ", email);
@@ -189,7 +195,7 @@ public class UserRoleService {
 				"id", true);
 		// where the user-id matches the inner query's user-id field
 		userQb.where().in("id", userRoleQb);
-		
+
 		return userDao.query(userQb.prepare());
 	}
 
@@ -236,19 +242,19 @@ public class UserRoleService {
 			roleDao.create(new Role(name));
 		}
 	}
-	
+
 	public List<Role> queryRoles() throws SQLException {
-		
+
 		logger.info("Roles queryForAll");
-		
+
 		return roleDao.queryForAll();
 	}
-	
+
 	public Role queryRoleById(int roleId) throws SQLException {
 
-			logger.info("queryRoleById id : {} ", roleId);
+		logger.info("queryRoleById id : {} ", roleId);
 
-			return roleDao.queryForId(roleId);
+		return roleDao.queryForId(roleId);
 	}
 
 	public void updateRole(int roleId, String newRoleName) throws SQLException {
@@ -282,24 +288,25 @@ public class UserRoleService {
 			roleDao.deleteById(roleId);
 		}
 	}
-	
+
 	public Pagination<User> queryPaginatedUsers(int pageNum, int pageCapacity,
-			String url, QueryBuilder<User, Integer> builder, RowMapper<User> mapper) throws SQLException {
-		
-		RawResultPagination<User> pagination = new RawResultPagination<User>(pageNum,
-				pageCapacity, url, userDao, builder);
+			String url, QueryBuilder<User, Integer> builder,
+			RowMapper<User> mapper) throws SQLException {
+
+		RawResultPagination<User> pagination = new RawResultPagination<User>(
+				pageNum, pageCapacity, url, userDao, builder);
 		pagination.execute(mapper);
 		return pagination;
 	}
-	
+
 	public Pagination<User> queryPaginatedUsers(int pageNum, int pageCapacity,
 			String url) throws SQLException {
-		
-		RawResultPagination<User> pagination = new RawResultPagination<User>(pageNum,
-				pageCapacity, url, userDao);
+
+		RawResultPagination<User> pagination = new RawResultPagination<User>(
+				pageNum, pageCapacity, url, userDao);
 		pagination.execute(new RowMapper<User>() {
 			@Override
-			public User mapRow(DatabaseResults rs) throws SQLException{
+			public User mapRow(DatabaseResults rs) throws SQLException {
 				User user = new User();
 				user.setId(rs.getInt(0));
 				user.setName(rs.getString(1));

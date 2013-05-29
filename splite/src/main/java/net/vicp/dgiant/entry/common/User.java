@@ -8,34 +8,32 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "acount")
 public class User {
-	
-	@DatabaseField(generatedId=true)
+
+	@DatabaseField(generatedId = true)
 	private int id;
-	
+
 	@DatabaseField()
 	private String name;
-	
+
 	@DatabaseField
 	private String password;
-	
+
 	@DatabaseField
 	private String email;
-	
+
 	@DatabaseField(version = true, dataType = DataType.DATE_STRING)
 	private Date lastModified;
-	
-	public User()
-	{
-		
+
+	public User() {
+
 	}
-	
-	public User (String name, String password, String email)
-	{
+
+	public User(String name, String password, String email) {
 		this.name = name;
 		this.password = password;
 		this.email = email;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
@@ -67,7 +65,7 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public Date getLastModified() {
 		return lastModified;
 	}

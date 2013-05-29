@@ -28,7 +28,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 	private QueryBuilder<T, Integer> builder;
 
 	private List<T> results;
-	
+
 	private String footer;
 
 	public RawResultPagination(int requestedPage, int pageCapacity, String url,
@@ -52,7 +52,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 
 		this(requestedPage, pageCapacity, url, dao, null);
 	}
-	
+
 	@Override
 	public String getFooter() {
 
@@ -82,8 +82,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 				iterator = dao.iterator();
 			}
 			drs = iterator.getRawResults();
-			if (requestedPage != 1)
-			{
+			if (requestedPage != 1) {
 				drs.moveAbsolute((requestedPage - 1) * pageCapacity);
 			}
 
@@ -96,7 +95,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 		} catch (SQLException e) {
 
 			logger.error(e.getMessage());
-			
+
 			throw e;
 
 		} finally {
@@ -132,11 +131,10 @@ public class RawResultPagination<T> implements Pagination<T> {
 					requestedPage, pageSize);
 			requestedPage = new Long(pageSize).intValue();
 		}
-		
+
 		if (requestedPage <= 0) {
 
-			logger.error("requestedPage[{}] is improper",
-					requestedPage);
+			logger.error("requestedPage[{}] is improper", requestedPage);
 			requestedPage = 1;
 		}
 
@@ -146,7 +144,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 		sbFooter.append("  " + requestedPage + "  ");
 		sbFooter.append(requestedPage == pageSize ? "Next" : url(
 				requestedPage + 1, "Next"));
-		
+
 		footer = sbFooter.toString();
 	}
 

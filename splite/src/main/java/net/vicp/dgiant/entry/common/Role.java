@@ -5,20 +5,18 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
 public class Role {
-	
-	@DatabaseField(generatedId=true)
+
+	@DatabaseField(generatedId = true)
 	private int id;
-	
+
 	@DatabaseField
 	private String name;
-	
-	public Role()
-	{
-		
+
+	public Role() {
+
 	}
-	
-	public Role(String name)
-	{
+
+	public Role(String name) {
 		this.name = name;
 	}
 

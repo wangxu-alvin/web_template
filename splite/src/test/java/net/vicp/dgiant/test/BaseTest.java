@@ -17,22 +17,19 @@ public class BaseTest extends AbstractJUnit4SpringContextTests {
 	@Autowired
 	private JdbcConnectionSource connectionSource;
 
-	protected void createTables(Class<?>...classes) throws SQLException {
-		for (Class<?> clazz : classes)
-		{
+	protected void createTables(Class<?>... classes) throws SQLException {
+		for (Class<?> clazz : classes) {
 			TableUtils.createTableIfNotExists(connectionSource, clazz);
 		}
 	}
 
-	protected void dropTables(Class<?>...classes) throws SQLException {
-		for (Class<?> clazz : classes)
-		{
+	protected void dropTables(Class<?>... classes) throws SQLException {
+		for (Class<?> clazz : classes) {
 			TableUtils.dropTable(connectionSource, clazz, false);
 		}
 	}
-	
-	protected JdbcConnectionSource getConnection ()
-	{
+
+	protected JdbcConnectionSource getConnection() {
 		return connectionSource;
 	}
 }
