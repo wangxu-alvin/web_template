@@ -1,5 +1,6 @@
 package net.vicp.dgiant.entry.common;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import com.j256.ormlite.field.DataType;
@@ -12,7 +13,7 @@ public class User {
 	@DatabaseField(generatedId = true)
 	private int id;
 
-	@DatabaseField()
+	@DatabaseField
 	private String name;
 
 	@DatabaseField
@@ -25,7 +26,7 @@ public class User {
 	private Date lastModified;
 
 	public User() {
-
+		
 	}
 
 	public User(String name, String password, String email) {

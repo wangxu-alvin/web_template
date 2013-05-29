@@ -7,9 +7,9 @@ import java.util.List;
 import net.vicp.dgiant.entry.common.Role;
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.entry.common.UserRole;
+import net.vicp.dgiant.exception.DataExpiredException;
 import net.vicp.dgiant.service.common.UserRoleService;
 import net.vicp.dgiant.test.BaseTest;
-import net.vicp.dgiant.util.DataExpiredException;
 
 import org.junit.After;
 import org.junit.Assert;

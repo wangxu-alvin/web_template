@@ -1,4 +1,4 @@
-package net.vicp.dgiant.util;
+package net.vicp.dgiant.exception;
 
 public class DataExpiredException extends Exception {
 

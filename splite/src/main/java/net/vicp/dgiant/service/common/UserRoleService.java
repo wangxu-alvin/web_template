@@ -8,10 +8,10 @@ import javax.annotation.Resource;
 import net.vicp.dgiant.entry.common.Role;
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.entry.common.UserRole;
-import net.vicp.dgiant.util.DataExpiredException;
+import net.vicp.dgiant.exception.DataExpiredException;
+import net.vicp.dgiant.exception.PaginationException;
 import net.vicp.dgiant.util.Pagination;
 import net.vicp.dgiant.util.RawResultPagination;
-import net.vicp.dgiant.util.RowMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
-import com.j256.ormlite.support.DatabaseResults;
 
 @Service
 public class UserRoleService {
@@ -147,27 +146,20 @@ public class UserRoleService {
 	 *            foot links for pages, such as previous page, next page
 	 * @return Pagination.getData:a page of users, Pagination.getFooter:foot URL
 	 * @throws SQLException
+	 * @throws PaginationException 
 	 */
 	public Pagination<User> queryUsersByName(String name, int pageNum,
-			int pageCapacity, String url) throws SQLException {
+			int pageCapacity, String url) throws SQLException, PaginationException {
 
 		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
 		builder.selectColumns("id", "name", "email");
 		builder.where().like("name", "%" + name + "%");
 		builder.orderBy("name", true);
-
-		return queryPaginatedUsers(pageNum, pageCapacity, url, builder,
-				new RowMapper<User>() {
-					@Override
-					public User mapRow(DatabaseResults rs) throws SQLException {
-						User user = new User();
-						user.setId(rs.getInt(0));
-						user.setName(rs.getString(1));
-						user.setEmail(rs.getString(2));
-						return user;
-
-					}
-				});
+		
+		RawResultPagination<User> pagination = new RawResultPagination<User>(
+				pageNum, pageCapacity, url, userDao, builder);
+		pagination.execute();
+		return pagination;
 	}
 
 	public List<User> queryUsersByEmail(String email) throws SQLException {
@@ -290,30 +282,11 @@ public class UserRoleService {
 	}
 
 	public Pagination<User> queryPaginatedUsers(int pageNum, int pageCapacity,
-			String url, QueryBuilder<User, Integer> builder,
-			RowMapper<User> mapper) throws SQLException {
-
-		RawResultPagination<User> pagination = new RawResultPagination<User>(
-				pageNum, pageCapacity, url, userDao, builder);
-		pagination.execute(mapper);
-		return pagination;
-	}
-
-	public Pagination<User> queryPaginatedUsers(int pageNum, int pageCapacity,
-			String url) throws SQLException {
+			String url) throws PaginationException {
 
 		RawResultPagination<User> pagination = new RawResultPagination<User>(
 				pageNum, pageCapacity, url, userDao);
-		pagination.execute(new RowMapper<User>() {
-			@Override
-			public User mapRow(DatabaseResults rs) throws SQLException {
-				User user = new User();
-				user.setId(rs.getInt(0));
-				user.setName(rs.getString(1));
-				user.setEmail(rs.getString(3));
-				return user;
-			}
-		});
+		pagination.execute();
 		return pagination;
 	}
 }

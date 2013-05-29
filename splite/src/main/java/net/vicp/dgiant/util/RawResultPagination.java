@@ -4,6 +4,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.vicp.dgiant.exception.PaginationException;
+import net.vicp.dgiant.exception.RawResultPaginationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,14 +68,26 @@ public class RawResultPagination<T> implements Pagination<T> {
 		return results;
 	}
 
-	public void execute(RowMapper<T> rowMapper) throws SQLException {
+	@Override
+	public void execute() throws PaginationException
+	{
+		generateFooter();
+		generateResult(null);
+	}
+	
+	public void execute(RowMapper<T> rowMapper) throws PaginationException
+	{
 		generateFooter();
 		generateResult(rowMapper);
 	}
 
-	private void generateResult(RowMapper<T> rowMapper) throws SQLException {
+	private void generateResult(RowMapper<T> rowMapper) throws  RawResultPaginationException {
 		CloseableIterator<T> iterator = null;
 		DatabaseResults drs = null;
+		
+		if (rowMapper == null) {
+			rowMapper = new RowMapperImpl<T>(dao.getDataClass());
+		}
 
 		try {
 			if (builder != null) {
@@ -85,7 +100,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 			if (requestedPage != 1) {
 				drs.moveAbsolute((requestedPage - 1) * pageCapacity);
 			}
-
+				
 			int count = 0;
 
 			while (drs.next() && (count < pageCapacity)) {
@@ -96,7 +111,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 
 			logger.error(e.getMessage());
 
-			throw e;
+			throw new RawResultPaginationException(e.getMessage());
 
 		} finally {
 			if (drs != null) {
@@ -107,8 +122,8 @@ public class RawResultPagination<T> implements Pagination<T> {
 			}
 		}
 	}
-
-	private void generateFooter() throws SQLException {
+	
+	private void generateFooter() throws RawResultPaginationException {
 		long amount = 0;
 		try {
 			if (builder != null) {
@@ -118,8 +133,10 @@ public class RawResultPagination<T> implements Pagination<T> {
 				amount = dao.countOf();
 			}
 		} catch (SQLException e) {
+			
 			logger.error(e.getMessage());
-			throw e;
+			
+			throw new RawResultPaginationException(e.getMessage());
 		}
 
 		long pageSize = (amount / pageCapacity)

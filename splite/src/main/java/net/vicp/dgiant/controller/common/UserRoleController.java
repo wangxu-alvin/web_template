@@ -3,10 +3,12 @@ package net.vicp.dgiant.controller.common;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.validation.Valid;
 
 import net.vicp.dgiant.entry.common.User;
+import net.vicp.dgiant.exception.PaginationException;
 import net.vicp.dgiant.service.common.UserRoleService;
 import net.vicp.dgiant.util.Pagination;
 import net.vicp.dgiant.validator.common.UserValidator;
@@ -29,7 +31,7 @@ public class UserRoleController {
 
 	@Autowired
 	private UserRoleService service;
-
+	
 	@InitBinder
 	public void setValidator(WebDataBinder binder) {
 		binder.setValidator(userValidator);
@@ -62,13 +64,13 @@ public class UserRoleController {
 	}
 
 	@RequestMapping(value = "/listPage")
-	public String listPage(Integer page, String type, String condition,
-			ModelMap map) {
-
+	public String listPage(Integer page, String type, String condition, Locale locale,
+			ModelMap map) throws PaginationException {
+		
 		if (page == null) {
 			page = 1;
 		}
-
+		
 		try {
 			Pagination<User> pagination = null;
 			if (condition == null) {

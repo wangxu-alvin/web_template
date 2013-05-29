@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import javax.annotation.Resource;
 
 import net.vicp.dgiant.entry.common.User;
+import net.vicp.dgiant.exception.PaginationException;
 import net.vicp.dgiant.test.BaseTest;
 import net.vicp.dgiant.util.RawResultPagination;
 import net.vicp.dgiant.util.RowMapper;
@@ -33,7 +34,7 @@ public class RawResultPaginationTest extends BaseTest {
 	}
 
 	@Test
-	public void getFooter() throws SQLException {
+	public void getFooter() throws PaginationException {
 
 		pagination = new RawResultPagination<User>(1, 50, "link", userDao);
 		pagination.execute(new RowMapper<User>() {
@@ -51,7 +52,7 @@ public class RawResultPaginationTest extends BaseTest {
 	}
 
 	@Test
-	public void query() throws SQLException {
+	public void query() throws SQLException, PaginationException {
 		pagination = new RawResultPagination<User>(2, 50, "link", userDao);
 		pagination.execute(new RowMapper<User>() {
 			@Override
