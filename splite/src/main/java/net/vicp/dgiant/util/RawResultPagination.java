@@ -3,12 +3,15 @@ package net.vicp.dgiant.util;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import net.vicp.dgiant.exception.PaginationException;
 import net.vicp.dgiant.exception.RawResultPaginationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
@@ -16,7 +19,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.DatabaseResults;
 
 public class RawResultPagination<T> implements Pagination<T> {
-
+	
 	private Logger logger = (Logger) LoggerFactory
 			.getLogger(RawResultPagination.class);
 
@@ -33,7 +36,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 	private List<T> results;
 
 	private String footer;
-
+	
 	public RawResultPagination(int requestedPage, int pageCapacity, String url,
 			Dao<T, Integer> dao, QueryBuilder<T, Integer> builder) {
 
@@ -86,7 +89,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 		DatabaseResults drs = null;
 		
 		if (rowMapper == null) {
-			rowMapper = new RowMapperImpl<T>(dao.getDataClass());
+			rowMapper = new CommonRowMapper<T>(dao.getDataClass());
 		}
 
 		try {
@@ -154,18 +157,29 @@ public class RawResultPagination<T> implements Pagination<T> {
 			logger.error("requestedPage[{}] is improper", requestedPage);
 			requestedPage = 1;
 		}
+		
+		Locale locale = LocaleContextHolder.getLocale();
+		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		messageSource.setBasename("classpath:message");
+		messageSource.setFallbackToSystemLocale(true);
+		messageSource.setDefaultEncoding("UTF-8");
+		
+		String previous = messageSource.getMessage("pagination.previous", null, locale);
+		String next = messageSource.getMessage("pagination.next", null, locale);
+		String current = messageSource.getMessage("pagination.current", null, locale);
+		String total = messageSource.getMessage("pagination.total", new Object[]{pageSize}, locale);
 
 		StringBuffer sbFooter = new StringBuffer();
-		sbFooter.append(requestedPage == 1 ? "Previous" : url(
-				requestedPage - 1, "Previous"));
-		sbFooter.append("  " + requestedPage + "  ");
-		sbFooter.append(requestedPage == pageSize ? "Next" : url(
-				requestedPage + 1, "Next"));
+		sbFooter.append(requestedPage == 1 ? previous : url(
+				requestedPage - 1, previous));
+		sbFooter.append("  " + current + " " + requestedPage + "  ");
+		sbFooter.append(requestedPage == pageSize ? next : url(
+				requestedPage + 1, next));
+		sbFooter.append(" " + total);
 
 		footer = sbFooter.toString();
 	}
 
-	// TODO need to be refined
 	private String url(int page, String... mark) {
 		return "<a href=" + url + "?page=" + page + ">"
 				+ (mark.length == 0 ? " page " + page : mark[0]) + "</a>";

@@ -1,6 +1,5 @@
 package net.vicp.dgiant.entry.common;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import com.j256.ormlite.field.DataType;

@@ -2,7 +2,7 @@ SpLite
 ============
 Introduction
 ---------------------
-SpLite provides a lightweight, integrated and easy-use J2EE development environment with typical use case samples such as basic database manipulation, paginated representation, log, internationalization, uploading, test and so on. The so-called ‘SpLite’ is a simple combination of two open source project name’s abbreviations, **Sp**ring and ORM<strong>Lite</strong> which are the backbones of this project.
+SpLite provides a lightweight, integrated and easy-use J2EE development environment with typical use case samples such as basic database manipulation, paginated representation, log, internationalization, uploading, test and so on. The so-called ‘SpLite’ is a simple combination of two open source project name’s abbreviations, <strong>Sp</strong>ring and ORM<strong>Lite</strong> which are the backbones of this project.
 
 
 Main tools and respective division of work
@@ -31,4 +31,4 @@ TODO
 
 Project Status
 ---------------------
-Currently the project is still in progress
+<strong>Currently the project is still in progress</strong>
