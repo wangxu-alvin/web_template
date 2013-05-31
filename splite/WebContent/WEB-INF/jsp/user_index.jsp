@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
 <html>
@@ -34,11 +35,10 @@
 			font-weight: bold;
 		}
 	</style>
-	<link rel="stylesheet" type="text/css" href="http://www.webdesignerdepot.com/wp-content/themes/wdd_new/style.css?v=56" media="screen, print" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 </head>
 <body>
-	<form action="listPage.jspa">
+	<form:form modelAttribute="form" action="listUser.jspa">
 		<br/>
 		<table cellpadding="0" cellspacing="0" class="winUI" width="70%">
 			<tr>
@@ -47,29 +47,33 @@
 			</tr>
 			<tr>
 				<td>
-					<select name="type">
-						<option value="name"><spring:message code="customer.name" /></option>
-						<option value="email"><spring:message code="customer.email" /></option>
-					</select>
-					<input type="text" name="condition"/>
+					<form:select path="type">
+						<form:option value="name"><spring:message code="customer.name" /></form:option>
+						<form:option value="email"><spring:message code="customer.email" /></form:option>
+					</form:select>
+					<form:input path="condition"/>
 					<input type="submit" value="<spring:message code="submit" />" />
 				</td>
 			</tr>
 		</table>
-	</form>
+	</form:form>
 	<table cellpadding="4" cellspacing="0" border="1" class="winUI" width="70%">
 		<thead>
+			<td>ID</td>
 			<td><spring:message code="customer.name" /></td>
 			<td><spring:message code="customer.email" /></td>
+			<td><spring:message code="last.modified" /></td>
 		</thead>
 		<tbody>
 		<c:forEach items="${pageUsers}" var="entry" >
 		<tr>
+			<td>${entry.id}</td>
 		  	<td>${entry.name}</td>
 			<td>${entry.email}</td>
+			<td>${entry.lastModified}</td>
 		</tr>
 		</c:forEach>
-		<tr><td colspan="2" style="text-align: right">${footer}</td></tr>
+		<tr><td colspan="4" style="text-align: right">${footer}</td></tr>
 		</tbody> 
 	</table>
 </body>

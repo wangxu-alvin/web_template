@@ -59,13 +59,15 @@ public class CommonRowMapper<T> implements RowMapper<T> {
 				Method setterMethod = clazz.getMethod(setter(field),
 						field.getType());
 
-				if (Integer.class == field.getType()) {
+				if (Integer.class == field.getType() || "int" == field.getType().getName()) {
 
 					setterMethod.invoke(entry, rs.getInt(index));
+					continue;
 
 				} else if (String.class == field.getType()) {
 
 					setterMethod.invoke(entry, rs.getString(index));
+					continue;
 
 				} else if (Date.class == field.getType()) {
 
@@ -81,13 +83,14 @@ public class CommonRowMapper<T> implements RowMapper<T> {
 								new Date(1000 * rs.getLong(index)));
 
 					}
+					continue;
 
 				} else {
 
 					// currently the common RowMapper does not support the entry
 					// who want to load its foreign member
 					logger.warn(field.getType().getName()
-							+ "is not supported by CommonRowMapper");
+							+ " is not supported by CommonRowMapper");
 
 				}
 			}

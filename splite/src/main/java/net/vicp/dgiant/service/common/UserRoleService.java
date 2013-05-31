@@ -152,8 +152,37 @@ public class UserRoleService {
 			int pageCapacity, String url) throws SQLException, PaginationException {
 
 		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
-		builder.selectColumns("id", "name", "email");
+		builder.selectColumns("id", "name", "email", "lastModified");
 		builder.where().like("name", "%" + name + "%");
+		builder.orderBy("name", true);
+		
+		RawResultPagination<User> pagination = new RawResultPagination<User>(
+				pageNum, pageCapacity, url, userDao, builder);
+		pagination.execute();
+		return pagination;
+	}
+	
+	/**
+	 * This is a paginated query by user email
+	 * 
+	 * @param name
+	 *            name query condition
+	 * @param pageNum
+	 *            requested page number
+	 * @param pageCapacity
+	 *            the size of showing in one page
+	 * @param url
+	 *            foot links for pages, such as previous page, next page
+	 * @return Pagination.getData:a page of users, Pagination.getFooter:foot URL
+	 * @throws SQLException
+	 * @throws PaginationException 
+	 */
+	public Pagination<User> queryUsersByEmail(String name, int pageNum,
+			int pageCapacity, String url) throws SQLException, PaginationException {
+
+		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
+		builder.selectColumns("id", "name", "email", "lastModified");
+		builder.where().like("email", "%" + name + "%");
 		builder.orderBy("name", true);
 		
 		RawResultPagination<User> pagination = new RawResultPagination<User>(
