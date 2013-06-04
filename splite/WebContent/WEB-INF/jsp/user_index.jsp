@@ -36,6 +36,13 @@
 		}
 	</style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script type="text/javascript">
+		function doDelete(id, name) {
+			if (confirm('<spring:message code="delete.confirmation"/> ' + name +'?')){
+				window.location.href='deleteUser.jspa?id=' + id;
+			}
+		}
+	</script>
 </head>
 <body>
 	<form:form modelAttribute="form" action="listUser.jspa">
@@ -48,29 +55,30 @@
 			<tr>
 				<td>
 					<form:select path="type">
-						<form:option value="name"><spring:message code="customer.name" /></form:option>
-						<form:option value="email"><spring:message code="customer.email" /></form:option>
+						<form:option value="name"><spring:message code="user.name" /></form:option>
+						<form:option value="email"><spring:message code="user.email" /></form:option>
 					</form:select>
 					<form:input path="condition"/>
 					<input type="submit" value="<spring:message code="submit" />" />
+					<a href="prepareOperation.jspa"><spring:message code="user.add" /></a>
 				</td>
 			</tr>
 		</table>
 	</form:form>
 	<table cellpadding="4" cellspacing="0" border="1" class="winUI" width="70%">
 		<thead>
-			<td>ID</td>
-			<td><spring:message code="customer.name" /></td>
-			<td><spring:message code="customer.email" /></td>
+			<td><spring:message code="user.name" /></td>
+			<td><spring:message code="user.email" /></td>
 			<td><spring:message code="last.modified" /></td>
+			<td><spring:message code="operation" /></td>
 		</thead>
 		<tbody>
 		<c:forEach items="${pageUsers}" var="entry" >
 		<tr>
-			<td>${entry.id}</td>
 		  	<td>${entry.name}</td>
 			<td>${entry.email}</td>
 			<td>${entry.lastModified}</td>
+			<td><a href="prepareOperation.jspa?id=${entry.id}"><spring:message code="update" /></a> | <a href="javascript:doDelete('${entry.id}', '${entry.name}')"><spring:message code="delete" /></a></td>
 		</tr>
 		</c:forEach>
 		<tr><td colspan="4" style="text-align: right">${footer}</td></tr>

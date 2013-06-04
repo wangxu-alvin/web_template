@@ -170,10 +170,10 @@ public class RawResultPagination<T> implements Pagination<T> {
 		String total = messageSource.getMessage("pagination.total", new Object[]{pageSize}, locale);
 
 		StringBuffer sbFooter = new StringBuffer();
+		sbFooter.append("  " + current + " " + requestedPage + " ");
 		sbFooter.append(requestedPage == 1 ? previous : url(
 				requestedPage - 1, previous));
-		sbFooter.append("  " + current + " " + requestedPage + "  ");
-		sbFooter.append(requestedPage == pageSize ? next : url(
+		sbFooter.append(requestedPage >= pageSize ? next : url(
 				requestedPage + 1, next));
 		sbFooter.append(" " + total);
 

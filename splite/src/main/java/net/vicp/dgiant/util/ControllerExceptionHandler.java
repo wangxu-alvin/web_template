@@ -1,7 +1,9 @@
 package net.vicp.dgiant.util;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -9,7 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ControllerExceptionHandler {
 
 	@ExceptionHandler({ Exception.class })
-	public ResponseEntity<String> handlePersonNotFound(Exception e) {
-		return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	public void handlePersonNotFound(Exception e, HttpServletResponse response) throws IOException {
+		response.sendError(508, e.getMessage());
+		// if we return ResponseEntity<String> here, then it will not go to error page defined in web.xml. 
+		// Instead, the message will be shown in a blank page without error code. I don't know why.
 	}
 }

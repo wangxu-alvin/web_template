@@ -7,7 +7,9 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import net.vicp.dgiant.entry.common.User;
+import net.vicp.dgiant.exception.DataExpiredException;
 import net.vicp.dgiant.exception.PaginationException;
+import net.vicp.dgiant.service.common.UserRoleService;
 import net.vicp.dgiant.test.BaseTest;
 import net.vicp.dgiant.util.RawResultPagination;
 import net.vicp.dgiant.util.RowMapper;
@@ -16,6 +18,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 import com.j256.ormlite.dao.Dao;
@@ -29,6 +32,9 @@ public class RawResultPaginationTest extends BaseTest {
 	
 	@Resource
 	private MessageSource messageSource;
+	
+	@Autowired
+	private UserRoleService service;
 
 	private RawResultPagination<User> pagination;
 
@@ -130,6 +136,24 @@ public class RawResultPaginationTest extends BaseTest {
 		Assert.assertNotNull("id", pagination.getData().get(0).getId());
 		Assert.assertNull(pagination.getData().get(0).getLastModified());
 		Assert.assertNull(pagination.getData().get(0).getPassword());
+	}
+	
+	@Test
+	public void rawResultUpdateUser() throws PaginationException {
+		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
+		pagination = new RawResultPagination<User>(5, 21, "link", userDao, builder);
+		pagination.execute();
+		
+		try {
+			User user = pagination.getData().get(0);
+			user.setName("user85_new");
+			service.updateUser(user);
+			Assert.assertTrue(true);
+		} catch (DataExpiredException e) {
+			Assert.assertTrue(false);
+		} catch (SQLException e) {
+			Assert.assertTrue(false);
+		}
 	}
 
 	@After

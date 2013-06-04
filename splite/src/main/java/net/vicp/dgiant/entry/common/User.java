@@ -6,7 +6,7 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "acount")
+@DatabaseTable(tableName = "account")
 public class User {
 
 	@DatabaseField(generatedId = true)
@@ -77,6 +77,6 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", password=" + password
-				+ ", email=" + email + "]";
+				+ ", email=" + email + ", lastModified=" + lastModified + "]";
 	}
 }

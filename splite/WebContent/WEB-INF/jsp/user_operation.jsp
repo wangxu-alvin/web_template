@@ -19,28 +19,30 @@
 </head>
  
 <body>
-	<form:form method="POST" modelAttribute="user" action="add.jspa">
+	<form:form method="POST" modelAttribute="user" action="${user.id == 0 ? 'addUser.jspa' : 'updateUser.jspa'}">
 		<form:errors path="*" cssClass="errorblock" element="div" />
 		<table>
 			<tr>
-				<td><spring:message code="customer.name" text="1" /></td>
+				<td><spring:message code="user.name" text="1" /></td>
 				<td><form:input path="name"/></td>
 				<td><form:errors path="name" cssClass="error" /></td>
 			</tr>
 			<tr>
-				<td><spring:message code="customer.password" text="2" /></td>
+				<td><spring:message code="user.password" text="2" /></td>
 				<td><form:input path="password" /></td>
 				<td><form:errors path="password" cssClass="error" /></td>
 			</tr>
 			<tr>
-				<td><spring:message code="customer.email" text="3" /></td>
+				<td><spring:message code="user.email" text="3" /></td>
 				<td><form:input path="email" /></td>
 				<td><form:errors path="email" cssClass="error" /></td>
 			</tr>
 			<tr>
-				<td colspan="3"><input type="submit" />Current Locale : ${pageContext.response.locale}</td>
+				<td colspan="3"><input type="submit" value="<spring:message code="submit" />" /><input type="button" value="<spring:message code="return" />" onclick="javascript:window.location.href='listUser.jspa'"/></td>
 			</tr>
 		</table>
+		<form:hidden path="id"/>
+		<form:hidden path="lastModified"/>
 	</form:form>
  
 </body>

@@ -67,7 +67,8 @@ public class UserRoleService {
 		int result = userDao.update(user);
 
 		if (result == 0) {
-			throw new DataExpiredException("");
+			throw new DataExpiredException("No data is updated, " +
+					"One possibility is the data has been updated by another thread");
 		}
 	}
 

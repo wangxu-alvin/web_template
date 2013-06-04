@@ -1,20 +1,25 @@
 package net.vicp.dgiant.controller.common;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import net.vicp.dgiant.entry.common.Role;
 import net.vicp.dgiant.entry.common.User;
+import net.vicp.dgiant.exception.DataExpiredException;
 import net.vicp.dgiant.exception.PaginationException;
 import net.vicp.dgiant.service.common.UserRoleService;
+import net.vicp.dgiant.util.Constants;
 import net.vicp.dgiant.util.Pagination;
 import net.vicp.dgiant.util.QueryForm;
 import net.vicp.dgiant.validator.common.UserValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -36,27 +41,64 @@ public class UserRoleController {
 	@InitBinder({"user"})
 	public void setValidator(WebDataBinder binder) {
 		binder.setValidator(userValidator);
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				Constants.DEFAULT_DATE_FORMAT);
+		dateFormat.setLenient(false);
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				dateFormat, true));
 	}
 	
-	@RequestMapping(value = "/prepareAdd")
-	public String add(ModelMap model) throws SQLException {
+	@RequestMapping(value = "/prepareOperation")
+	public String prepare(Integer id, ModelMap model) throws SQLException {
+		User user = null;
+		if (id == null) {
+			user = new User();
+		} else {
+			user = service.queryUserById(id);
+		}
+		model.addAttribute("user", user);
 
-		model.addAttribute("user", new User());
-
-		return "user_add";
+		return "user_operation";
 	}
 	
 
-	@RequestMapping(value = "/add")
+	@RequestMapping(value = "/addUser")
 	public String add(@ModelAttribute("user") @Valid User user,
 			BindingResult result, ModelMap model) throws SQLException {
 
 		if (result.hasErrors()) {
 			model.addAttribute("user", user);
-			return "user_add";
+			return "user_operation";
 		}
 		
 		service.createUser(user);
+
+		return "redirect:listUser.jspa";
+	}
+	
+	@RequestMapping(value = "/updateUser")
+	public String update(@ModelAttribute("user") @Valid User user,
+			BindingResult result, ModelMap model) throws SQLException, DataExpiredException {
+
+		if (result.hasErrors()) {
+			model.addAttribute("user", user);
+			return "user_operation";
+		}
+		
+		service.updateUser(user);
+
+		return "redirect:listUser.jspa";
+	}
+	
+	@RequestMapping(value = "/deleteUser")
+	public String delete(Integer id) throws SQLException, DataExpiredException {
+
+		if (id == null) {
+			throw new IllegalArgumentException("Wrong aregument when doing delete");
+		}
+		
+		service.deleteUser(id);
 
 		return "redirect:listUser.jspa";
 	}
