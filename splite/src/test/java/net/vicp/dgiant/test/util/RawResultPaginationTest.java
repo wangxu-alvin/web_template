@@ -77,8 +77,8 @@ public class RawResultPaginationTest extends BaseTest {
 			}
 		});
 
-		Assert.assertEquals("user51", pagination.getData().get(0).getName());
-		Assert.assertEquals(50, pagination.getData().size());
+		Assert.assertEquals("user51", pagination.getRows().get(0).getName());
+		Assert.assertEquals(50, pagination.getRows().size());
 
 		pagination = new RawResultPagination<User>(4, 25, "link", userDao);
 		pagination.execute(new RowMapper<User>() {
@@ -91,8 +91,8 @@ public class RawResultPaginationTest extends BaseTest {
 			}
 		});
 
-		Assert.assertEquals("user76", pagination.getData().get(0).getName());
-		Assert.assertEquals(25, pagination.getData().size());
+		Assert.assertEquals("user76", pagination.getRows().get(0).getName());
+		Assert.assertEquals(25, pagination.getRows().size());
 
 		pagination = new RawResultPagination<User>(5, 21, "link", userDao);
 		pagination.execute(new RowMapper<User>() {
@@ -105,8 +105,8 @@ public class RawResultPaginationTest extends BaseTest {
 			}
 		});
 
-		Assert.assertEquals("user85", pagination.getData().get(0).getName());
-		Assert.assertEquals(16, pagination.getData().size());
+		Assert.assertEquals("user85", pagination.getRows().get(0).getName());
+		Assert.assertEquals(16, pagination.getRows().size());
 	}
 	
 	@Test
@@ -114,12 +114,12 @@ public class RawResultPaginationTest extends BaseTest {
 		pagination = new RawResultPagination<User>(5, 21, "link", userDao);
 		pagination.execute();
 
-		Assert.assertEquals("user85", pagination.getData().get(0).getName());
-		Assert.assertEquals("password", pagination.getData().get(0).getPassword());
-		Assert.assertEquals("email", pagination.getData().get(0).getEmail());
+		Assert.assertEquals("user85", pagination.getRows().get(0).getName());
+		Assert.assertEquals("password", pagination.getRows().get(0).getPassword());
+		Assert.assertEquals("email", pagination.getRows().get(0).getEmail());
 		Assert.assertEquals(
 				new SimpleDateFormat("yyyyMMddHH").format(new Date()),
-				new SimpleDateFormat("yyyyMMddHH").format(pagination.getData()
+				new SimpleDateFormat("yyyyMMddHH").format(pagination.getRows()
 						.get(0).getLastModified()));
 	}
 	
@@ -130,12 +130,12 @@ public class RawResultPaginationTest extends BaseTest {
 		pagination = new RawResultPagination<User>(5, 21, "link", userDao, builder);
 		pagination.execute();
 
-		Assert.assertEquals("user85", pagination.getData().get(0).getName());
-		Assert.assertEquals("email", pagination.getData().get(0).getEmail());
+		Assert.assertEquals("user85", pagination.getRows().get(0).getName());
+		Assert.assertEquals("email", pagination.getRows().get(0).getEmail());
 		// id field will be selected by default
-		Assert.assertNotNull("id", pagination.getData().get(0).getId());
-		Assert.assertNull(pagination.getData().get(0).getLastModified());
-		Assert.assertNull(pagination.getData().get(0).getPassword());
+		Assert.assertNotNull("id", pagination.getRows().get(0).getId());
+		Assert.assertNull(pagination.getRows().get(0).getLastModified());
+		Assert.assertNull(pagination.getRows().get(0).getPassword());
 	}
 	
 	@Test
@@ -145,7 +145,7 @@ public class RawResultPaginationTest extends BaseTest {
 		pagination.execute();
 		
 		try {
-			User user = pagination.getData().get(0);
+			User user = pagination.getRows().get(0);
 			user.setName("user85_new");
 			service.updateUser(user);
 			Assert.assertTrue(true);

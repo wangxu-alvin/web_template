@@ -129,7 +129,7 @@ public class UserRoleService {
 		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
 		builder.selectColumns("name", "email");
 		builder.where().like("name", "%" + name + "%");
-		builder.orderBy("name", true);
+		builder.orderBy("id", true);
 
 		return userDao.query(builder.prepare());
 	}
@@ -155,7 +155,7 @@ public class UserRoleService {
 		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
 		builder.selectColumns("id", "name", "email", "lastModified");
 		builder.where().like("name", "%" + name + "%");
-		builder.orderBy("name", true);
+		builder.orderBy("id", true);
 		
 		RawResultPagination<User> pagination = new RawResultPagination<User>(
 				pageNum, pageCapacity, url, userDao, builder);
@@ -184,7 +184,7 @@ public class UserRoleService {
 		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
 		builder.selectColumns("id", "name", "email", "lastModified");
 		builder.where().like("email", "%" + name + "%");
-		builder.orderBy("name", true);
+		builder.orderBy("id", true);
 		
 		RawResultPagination<User> pagination = new RawResultPagination<User>(
 				pageNum, pageCapacity, url, userDao, builder);
@@ -316,6 +316,14 @@ public class UserRoleService {
 
 		RawResultPagination<User> pagination = new RawResultPagination<User>(
 				pageNum, pageCapacity, url, userDao);
+		pagination.execute();
+		return pagination;
+	}
+	
+	public Pagination<User> queryPaginatedUsers(int pageNum, int pageCapacity) throws PaginationException {
+
+		RawResultPagination<User> pagination = new RawResultPagination<User>(
+				pageNum, pageCapacity, null, userDao);
 		pagination.execute();
 		return pagination;
 	}

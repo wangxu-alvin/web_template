@@ -33,7 +33,9 @@ public class RawResultPagination<T> implements Pagination<T> {
 
 	private QueryBuilder<T, Integer> builder;
 
-	private List<T> results;
+	private List<T> rows;
+	
+	private long total;
 
 	private String footer;
 	
@@ -50,7 +52,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 		this.dao = dao;
 
 		this.builder = builder;
-		results = new ArrayList<T>(pageCapacity);
+		rows = new ArrayList<T>(pageCapacity);
 	}
 
 	public RawResultPagination(int requestedPage, int pageCapacity, String url,
@@ -66,20 +68,26 @@ public class RawResultPagination<T> implements Pagination<T> {
 	}
 
 	@Override
-	public List<T> getData() {
+	public List<T> getRows() {
 
-		return results;
+		return rows;
 	}
 
 	@Override
+	public long getTotal() {
+		return total;
+	}
+	
 	public void execute() throws PaginationException
 	{
+		generateTotal();
 		generateFooter();
 		generateResult(null);
 	}
 	
 	public void execute(RowMapper<T> rowMapper) throws PaginationException
 	{
+		generateTotal();
 		generateFooter();
 		generateResult(rowMapper);
 	}
@@ -107,7 +115,7 @@ public class RawResultPagination<T> implements Pagination<T> {
 			int count = 0;
 
 			while (drs.next() && (count < pageCapacity)) {
-				results.add(rowMapper.mapRow(drs));
+				rows.add(rowMapper.mapRow(drs));
 				count++;
 			}
 		} catch (SQLException e) {
@@ -126,14 +134,13 @@ public class RawResultPagination<T> implements Pagination<T> {
 		}
 	}
 	
-	private void generateFooter() throws RawResultPaginationException {
-		long amount = 0;
+	private void generateTotal() throws RawResultPaginationException {
 		try {
 			if (builder != null) {
 				builder.setCountOf(true);
-				amount = dao.countOf(builder.prepare());
+				total = dao.countOf(builder.prepare());
 			} else {
-				amount = dao.countOf();
+				total = dao.countOf();
 			}
 		} catch (SQLException e) {
 			
@@ -141,9 +148,12 @@ public class RawResultPagination<T> implements Pagination<T> {
 			
 			throw new RawResultPaginationException(e.getMessage());
 		}
-
-		long pageSize = (amount / pageCapacity)
-				+ ((amount % pageCapacity) > 0 ? 1 : 0);
+	}
+	
+	private void generateFooter() throws RawResultPaginationException {
+		
+		long pageSize = (total / pageCapacity)
+				+ ((total % pageCapacity) > 0 ? 1 : 0);
 
 		if (requestedPage > pageSize) {
 

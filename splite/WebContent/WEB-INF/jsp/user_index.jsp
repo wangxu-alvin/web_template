@@ -47,7 +47,7 @@
 <body>
 	<form:form modelAttribute="form" action="listUser.jspa">
 		<br/>
-		<table cellpadding="0" cellspacing="0" class="winUI" width="70%">
+		<table cellpadding="0" cellspacing="0" class="winUI" width="100%">
 			<tr>
 				<td><spring:message code="pagination.sample" />
 				</td>
@@ -59,13 +59,13 @@
 						<form:option value="email"><spring:message code="user.email" /></form:option>
 					</form:select>
 					<form:input path="condition"/>
-					<input type="submit" value="<spring:message code="submit" />" />
+					<input type="submit" value="<spring:message code="query" />" />
 					<a href="prepareOperation.jspa"><spring:message code="user.add" /></a>
 				</td>
 			</tr>
 		</table>
 	</form:form>
-	<table cellpadding="4" cellspacing="0" border="1" class="winUI" width="70%">
+	<table cellpadding="4" cellspacing="0" border="1" class="winUI" width="100%">
 		<thead>
 			<td><spring:message code="user.name" /></td>
 			<td><spring:message code="user.email" /></td>

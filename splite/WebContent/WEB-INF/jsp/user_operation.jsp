@@ -38,7 +38,7 @@
 				<td><form:errors path="email" cssClass="error" /></td>
 			</tr>
 			<tr>
-				<td colspan="3"><input type="submit" value="<spring:message code="submit" />" /><input type="button" value="<spring:message code="return" />" onclick="javascript:window.location.href='listUser.jspa'"/></td>
+				<td colspan="3"><input type="submit" value="<spring:message code="save" />" /><input type="button" value="<spring:message code="cancel" />" onclick="javascript:window.location.href='listUser.jspa'"/></td>
 			</tr>
 		</table>
 		<form:hidden path="id"/>

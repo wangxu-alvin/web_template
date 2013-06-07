@@ -2,6 +2,8 @@ package net.vicp.dgiant.entry.common;
 
 import java.util.Date;
 
+import net.vicp.dgiant.util.Constants;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

@@ -16,7 +16,7 @@ Main tools and respective division of work
 <li><a href="http://www.gradle.org">Gradle</a>, a build tool that can be considered as a substitution of ANT</li>
 <li><a href="http://www.eclipse.org/webtools/">Eclipse WTP</a>, the IDE</li>
 <li><a href="http://www.mysql.com/">MySQL</a>, it is the database the project uses by default that can be replaced by other free databases, e.g. PostgreSQL.(MySQL default charset setting, refer to <a href="http://stackoverflow.com/questions/3513773/change-mysql-default-character-set-to-utf8-in-my-cnf">this</a>)</li>
-<li><a href="http://tomcat.apache.org/">Tomcat</a>, it is the application server the project uses by default that can be replaced by other servers, e.g. glassfish.(Tomcat charset also need to be considered)</li>
+<li><a href="http://tomcat.apache.org/">Tomcat</a>, it is the application server the project uses by default that can be replaced by other servers, e.g. glassfish.(Tomcat charset setting also needs to be considered)</li>
 </ol>
 
 <img src="metadata/SpLite.jpg" alt="splite">
@@ -27,7 +27,7 @@ TODO.
 
 License
 ---------------------
-TODO
+Released under the <a href="http://opensource.org/licenses/MIT">MIT license.</a>
 
 Project Status
 ---------------------
