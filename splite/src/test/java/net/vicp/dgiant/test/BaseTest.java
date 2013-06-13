@@ -22,6 +22,12 @@ public class BaseTest extends AbstractJUnit4SpringContextTests {
 			TableUtils.createTableIfNotExists(connectionSource, clazz);
 		}
 	}
+	
+	protected void clearTables(Class<?>... classes) throws SQLException {
+		for (Class<?> clazz : classes) {
+			TableUtils.clearTable(connectionSource, clazz);
+		}
+	}
 
 	protected void dropTables(Class<?>... classes) throws SQLException {
 		for (Class<?> clazz : classes) {

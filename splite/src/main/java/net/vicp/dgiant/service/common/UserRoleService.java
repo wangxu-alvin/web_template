@@ -10,8 +10,9 @@ import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.entry.common.UserRole;
 import net.vicp.dgiant.exception.DataExpiredException;
 import net.vicp.dgiant.exception.PaginationException;
-import net.vicp.dgiant.util.Pagination;
-import net.vicp.dgiant.util.RawResultPagination;
+import net.vicp.dgiant.pagination.Pagination;
+import net.vicp.dgiant.pagination.impl.PaginationQuery;
+import net.vicp.dgiant.pagination.impl.RawResultPagination;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,15 +151,15 @@ public class UserRoleService {
 	 * @throws PaginationException 
 	 */
 	public Pagination<User> queryUsersByName(String name, int pageNum,
-			int pageCapacity, String url) throws SQLException, PaginationException {
+			int pageCapacity) throws SQLException, PaginationException {
 
-		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
-		builder.selectColumns("id", "name", "email", "lastModified");
-		builder.where().like("name", "%" + name + "%");
-		builder.orderBy("id", true);
+		PaginationQuery<User, Integer> query = new PaginationQuery<User, Integer>(userDao);
+		query.selectColumns("id", "name", "email", "lastModified");
+		query.where().like("name", "%" + name + "%");
+		query.orderBy("id", true);
 		
 		RawResultPagination<User> pagination = new RawResultPagination<User>(
-				pageNum, pageCapacity, url, userDao, builder);
+				pageNum, pageCapacity, query);
 		pagination.execute();
 		return pagination;
 	}
@@ -179,15 +180,15 @@ public class UserRoleService {
 	 * @throws PaginationException 
 	 */
 	public Pagination<User> queryUsersByEmail(String name, int pageNum,
-			int pageCapacity, String url) throws SQLException, PaginationException {
+			int pageCapacity) throws SQLException, PaginationException {
 
-		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
-		builder.selectColumns("id", "name", "email", "lastModified");
-		builder.where().like("email", "%" + name + "%");
-		builder.orderBy("id", true);
+		PaginationQuery<User, Integer> query = new PaginationQuery<User, Integer>(userDao);
+		query.selectColumns("id", "name", "email", "lastModified");
+		query.where().like("email", "%" + name + "%");
+		query.orderBy("id", true);
 		
 		RawResultPagination<User> pagination = new RawResultPagination<User>(
-				pageNum, pageCapacity, url, userDao, builder);
+				pageNum, pageCapacity, query);
 		pagination.execute();
 		return pagination;
 	}
@@ -311,19 +312,10 @@ public class UserRoleService {
 		}
 	}
 
-	public Pagination<User> queryPaginatedUsers(int pageNum, int pageCapacity,
-			String url) throws PaginationException {
-
-		RawResultPagination<User> pagination = new RawResultPagination<User>(
-				pageNum, pageCapacity, url, userDao);
-		pagination.execute();
-		return pagination;
-	}
-	
 	public Pagination<User> queryPaginatedUsers(int pageNum, int pageCapacity) throws PaginationException {
 
 		RawResultPagination<User> pagination = new RawResultPagination<User>(
-				pageNum, pageCapacity, null, userDao);
+				pageNum, pageCapacity, new PaginationQuery<User, Integer>(userDao));
 		pagination.execute();
 		return pagination;
 	}

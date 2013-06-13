@@ -1,15 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'war'
+apply plugin: 'jetty'
 
 repositories {
-    maven {
-		credentials {
-				username 'admin'
-				password 'canihelpyou123'
-		}
-		url 'http://10.80.200.84:8081/archiva/repository/nds-test/'
-	}
+    mavenCentral()
 }
 
 def spring_version = '3.2.2.RELEASE'
@@ -34,13 +29,18 @@ dependencies {
 	'ch.qos.logback:logback-classic:1.0.12'
 	)
 	runtime(
-	'mysql:mysql-connector-java:5.1.6',
+	'com.h2database:h2:1.3.172',
 	'jstl:jstl:1.2'
 	)
 	testCompile (
 	'org.springframework:spring-test:' + spring_version,
 	'junit:junit:4.11'
 	)
+}
+
+test {
+  // init test data
+  include 'net/vicp/dgiant/test/util/DataInitialization.*'
 }
 
 webAppDirName="WebContent"

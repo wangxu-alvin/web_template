@@ -126,6 +126,6 @@ public class UserRoleServiceTest extends BaseTest {
 
 	@After
 	public void tear() throws SQLException {
-//		dropTables(UserRole.class, User.class, Role.class);
+		dropTables(UserRole.class, User.class, Role.class);
 	}
 }

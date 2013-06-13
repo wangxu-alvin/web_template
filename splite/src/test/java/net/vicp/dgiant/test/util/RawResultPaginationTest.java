@@ -9,9 +9,10 @@ import javax.annotation.Resource;
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.exception.DataExpiredException;
 import net.vicp.dgiant.exception.PaginationException;
+import net.vicp.dgiant.pagination.impl.PaginationQuery;
+import net.vicp.dgiant.pagination.impl.RawResultPagination;
 import net.vicp.dgiant.service.common.UserRoleService;
 import net.vicp.dgiant.test.BaseTest;
-import net.vicp.dgiant.util.RawResultPagination;
 import net.vicp.dgiant.util.RowMapper;
 
 import org.junit.After;
@@ -22,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.DatabaseResults;
 
 public class RawResultPaginationTest extends BaseTest {
@@ -66,7 +66,7 @@ public class RawResultPaginationTest extends BaseTest {
 
 	@Test
 	public void query() throws SQLException, PaginationException {
-		pagination = new RawResultPagination<User>(2, 50, "link", userDao);
+		pagination = new RawResultPagination<User>(2, 50, new PaginationQuery<User, Integer>(userDao));
 		pagination.execute(new RowMapper<User>() {
 			@Override
 			public User mapRow(DatabaseResults rs) throws SQLException {
@@ -80,7 +80,7 @@ public class RawResultPaginationTest extends BaseTest {
 		Assert.assertEquals("user51", pagination.getRows().get(0).getName());
 		Assert.assertEquals(50, pagination.getRows().size());
 
-		pagination = new RawResultPagination<User>(4, 25, "link", userDao);
+		pagination = new RawResultPagination<User>(4, 25, new PaginationQuery<User, Integer>(userDao));
 		pagination.execute(new RowMapper<User>() {
 			@Override
 			public User mapRow(DatabaseResults rs) throws SQLException {
@@ -94,7 +94,7 @@ public class RawResultPaginationTest extends BaseTest {
 		Assert.assertEquals("user76", pagination.getRows().get(0).getName());
 		Assert.assertEquals(25, pagination.getRows().size());
 
-		pagination = new RawResultPagination<User>(5, 21, "link", userDao);
+		pagination = new RawResultPagination<User>(5, 21, new PaginationQuery<User, Integer>(userDao));
 		pagination.execute(new RowMapper<User>() {
 			@Override
 			public User mapRow(DatabaseResults rs) throws SQLException {
@@ -111,7 +111,7 @@ public class RawResultPaginationTest extends BaseTest {
 	
 	@Test
 	public void commonRowMapper() throws PaginationException {
-		pagination = new RawResultPagination<User>(5, 21, "link", userDao);
+		pagination = new RawResultPagination<User>(5, 21, new PaginationQuery<User, Integer>(userDao));
 		pagination.execute();
 
 		Assert.assertEquals("user85", pagination.getRows().get(0).getName());
@@ -125,9 +125,9 @@ public class RawResultPaginationTest extends BaseTest {
 	
 	@Test
 	public void commonRowMapperWithSelectColumns() throws PaginationException {
-		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
-		builder.selectColumns("email", "name");
-		pagination = new RawResultPagination<User>(5, 21, "link", userDao, builder);
+		PaginationQuery<User, Integer> query = new PaginationQuery<User, Integer>(userDao);
+		query.selectColumns("email", "name");
+		pagination = new RawResultPagination<User>(5, 21, query);
 		pagination.execute();
 
 		Assert.assertEquals("user85", pagination.getRows().get(0).getName());
@@ -140,8 +140,7 @@ public class RawResultPaginationTest extends BaseTest {
 	
 	@Test
 	public void rawResultUpdateUser() throws PaginationException {
-		QueryBuilder<User, Integer> builder = userDao.queryBuilder();
-		pagination = new RawResultPagination<User>(5, 21, "link", userDao, builder);
+		pagination = new RawResultPagination<User>(5, 21, new PaginationQuery<User, Integer>(userDao));
 		pagination.execute();
 		
 		try {

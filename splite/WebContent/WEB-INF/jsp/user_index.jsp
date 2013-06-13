@@ -2,7 +2,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="/WEB-INF/tld/Pagination.tld" prefix="pagination" %>
+
 <html>
 <head>
 	<style type="text/css">
@@ -45,7 +47,7 @@
 	</script>
 </head>
 <body>
-	<form:form modelAttribute="form" action="listUser.jspa">
+	<form:form modelAttribute="form" action="prepare.jspa" name="form1">
 		<br/>
 		<table cellpadding="0" cellspacing="0" class="winUI" width="100%">
 			<tr>
@@ -61,6 +63,7 @@
 					<form:input path="condition"/>
 					<input type="submit" value="<spring:message code="query" />" />
 					<a href="prepareOperation.jspa"><spring:message code="user.add" /></a>
+					<pagination:formHiddenElements/>
 				</td>
 			</tr>
 		</table>
@@ -73,7 +76,7 @@
 			<td><spring:message code="operation" /></td>
 		</thead>
 		<tbody>
-		<c:forEach items="${pageUsers}" var="entry" >
+		<c:forEach items="${pagination.rows}" var="entry" >
 		<tr>
 		  	<td>${entry.name}</td>
 			<td>${entry.email}</td>
@@ -81,7 +84,15 @@
 			<td><a href="prepareOperation.jspa?id=${entry.id}"><spring:message code="update" /></a> | <a href="javascript:doDelete('${entry.id}', '${entry.name}')"><spring:message code="delete" /></a></td>
 		</tr>
 		</c:forEach>
-		<tr><td colspan="4" style="text-align: right">${footer}</td></tr>
+		<tr>
+			<td align="left">
+				<pagination:capacitySelect pageCapacity="${pagination.pageCapacity}" />
+			</td>
+			<td colspan="3" align="right">
+				<pagination:footer pageCapacity="${pagination.pageCapacity}" total="${pagination.total}" requestedPage="${pagination.currentPage}" />
+				<pagination:submit formName="form1" />
+			</td>
+		</tr>
 		</tbody> 
 	</table>
 </body>

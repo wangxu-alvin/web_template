@@ -7,10 +7,10 @@ import java.util.Date;
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.exception.DataExpiredException;
 import net.vicp.dgiant.exception.PaginationException;
+import net.vicp.dgiant.pagination.Pagination;
 import net.vicp.dgiant.service.common.UserRoleService;
 import net.vicp.dgiant.util.Constants;
 import net.vicp.dgiant.util.CompatibleDateEditor;
-import net.vicp.dgiant.util.Pagination;
 import net.vicp.dgiant.util.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,9 +86,9 @@ public class UserAsynController {
 		if (condition == null) {
 			pagination = service.queryPaginatedUsers(page, rows);
 		} else if ("name".equals(type)) {
-			pagination = service.queryUsersByName(condition, page, rows, null);
+			pagination = service.queryUsersByName(condition, page, rows);
 		} else {
-			pagination = service.queryUsersByEmail(condition, page, rows, null);
+			pagination = service.queryUsersByEmail(condition, page, rows);
 		}
 		
         return pagination;

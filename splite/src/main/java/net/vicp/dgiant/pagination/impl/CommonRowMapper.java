@@ -1,13 +1,16 @@
-package net.vicp.dgiant.util;
+package net.vicp.dgiant.pagination.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import net.vicp.dgiant.exception.RawResultPaginationException;
+import net.vicp.dgiant.util.Constants;
+import net.vicp.dgiant.util.RowMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +36,7 @@ public class CommonRowMapper<T> implements RowMapper<T> {
 	}
 
 	@Override
-	public T mapRow(DatabaseResults rs) throws RawResultPaginationException {
+	public T mapRow(DatabaseResults rs) throws RawResultPaginationException, SQLException {
 
 		T entry;
 		try {
@@ -49,8 +52,9 @@ public class CommonRowMapper<T> implements RowMapper<T> {
 						.getAnnotation(DatabaseField.class);
 				String columnName = "".equals(dbFiled.columnName()) ? field
 						.getName() : dbFiled.columnName();
-
-				int index = columns.indexOf(columnName);
+						
+				//FIXME for h2 DB the columnName need to be upper, for MySQL the columnName is OK		
+				int index = columns.indexOf(columnName.toUpperCase());
 
 				if (index == -1) {
 					continue;
@@ -59,7 +63,8 @@ public class CommonRowMapper<T> implements RowMapper<T> {
 				Method setterMethod = clazz.getMethod(setter(field),
 						field.getType());
 
-				if (Integer.class == field.getType() || "int" == field.getType().getName()) {
+				if (Integer.class == field.getType()
+						|| "int" == field.getType().getName()) {
 
 					setterMethod.invoke(entry, rs.getInt(index));
 					continue;
@@ -89,18 +94,21 @@ public class CommonRowMapper<T> implements RowMapper<T> {
 
 					// currently the common RowMapper does not support the entry
 					// who want to load its foreign member
-					logger.warn(field.getType().getName()
+					logger.debug(field.getType().getName()
+							+ " is not supported by CommonRowMapper");
+					
+					throw new RawResultPaginationException(field.getType().getName()
 							+ " is not supported by CommonRowMapper");
 
 				}
 			}
+		} catch (SQLException e) {
+			logger.debug(e.getMessage());
+			throw new SQLException(e.getMessage());
 		} catch (Exception e) {
-
-			logger.error(e.getMessage());
-
+			logger.debug(e.getMessage());
 			throw new RawResultPaginationException(e.getMessage());
-		}
-
+		}		
 		return entry;
 	}
 

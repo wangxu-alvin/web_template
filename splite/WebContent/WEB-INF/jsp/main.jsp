@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-	<iframe width="50%" height="500" frameborder=0 align="left" src="listUser.jspa"></iframe>
+	<iframe width="50%" height="500" frameborder=0 align="left" src="prepare.jspa"></iframe>
 	<iframe width="50%"  height="500" frameborder=0 align="right"  src="asyn.jspa"></iframe>
 </body>
 </html>

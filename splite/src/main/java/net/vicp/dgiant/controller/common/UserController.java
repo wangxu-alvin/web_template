@@ -9,10 +9,10 @@ import javax.validation.Valid;
 import net.vicp.dgiant.entry.common.User;
 import net.vicp.dgiant.exception.DataExpiredException;
 import net.vicp.dgiant.exception.PaginationException;
+import net.vicp.dgiant.pagination.Pagination;
 import net.vicp.dgiant.service.common.UserRoleService;
 import net.vicp.dgiant.util.Constants;
 import net.vicp.dgiant.util.CompatibleDateEditor;
-import net.vicp.dgiant.util.Pagination;
 import net.vicp.dgiant.util.QueryForm;
 import net.vicp.dgiant.validator.common.UserValidator;
 
@@ -24,7 +24,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
+@SessionAttributes({"form", "page", "capacity"})
 @Controller
 public class UserController {
 
@@ -100,31 +102,47 @@ public class UserController {
 	}
 	
 	@RequestMapping(value = "/listUser")
-	public String listUsers(Integer page, @ModelAttribute("form") QueryForm form,
+	public String listUsers(@ModelAttribute("page") int page, @ModelAttribute("capacity") int capacity, @ModelAttribute("form") QueryForm form,
 			ModelMap map) throws PaginationException, SQLException {
 		
-		//TODO if we don't check page here, just put null page to the other methods, 
-		//null pointer exception will be raised no matter if you use it or not.
+		Pagination<User> pagination = null;
+		if (form == null || form.getCondition() == null || "".equals(form.getCondition())) {
+			pagination = service.queryPaginatedUsers(page, capacity);
+		} else if ("name".equals(form.getType())) {
+			pagination = service.queryUsersByName(form.getCondition(), page, capacity);
+		} else {
+			pagination = service.queryUsersByEmail(form.getCondition(), page, capacity);
+		}
+		// save the query condition
+		map.addAttribute("form", form);
+		map.addAttribute("pagination", pagination);
+		
+		return "user_index";
+	}
+	
+	@RequestMapping(value = "/prepare")
+	public String processRequest(Integer page, Integer capacity, QueryForm form, ModelMap map) {
+		
 		if (page == null) {
 			page = 1;
 		}
 		
-		Pagination<User> pagination = null;
-		if (form == null || form.getCondition() == null) {
-			pagination = service.queryPaginatedUsers(page, 10,
-					"listUser.jspa");
-		} else if ("name".equals(form.getType())) {
-			pagination = service.queryUsersByName(form.getCondition(), page, 10,
-					"listUser.jspa");
-		} else {
-			pagination = service.queryUsersByEmail(form.getCondition(), page, 10,
-					"listUser.jspa");
+		if (capacity == null) {
+			if (map.get("capacity") == null) {
+				capacity = 10;
+			} else {
+				capacity = (Integer) map.get("capacity");
+			}
 		}
-		// save the query condition
-		map.addAttribute("form", form);
-		map.addAttribute("pageUsers", pagination.getRows());
-		map.addAttribute("footer", pagination.getFooter());
 		
-		return "user_index";
+		if (form == null) {
+			form = new QueryForm();
+		}
+		
+		map.put("page", page);
+		map.put("capacity", capacity);
+		map.put("form", form);
+		
+		return "redirect:listUser.jspa";
 	}
 }

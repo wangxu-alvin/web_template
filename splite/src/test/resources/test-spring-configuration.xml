@@ -9,11 +9,19 @@
 
 	<context:component-scan base-package="net.vicp.dgiant"/>
 	
+	<bean id="configurationProperties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+	
 	<bean id="connectionSource" class="com.j256.ormlite.jdbc.JdbcConnectionSource"
 		init-method="initialize">
-		<property name="url" value="jdbc:mysql://10.80.200.84:3306/test" />
-		<property name="username" value="anaconda" />
-		<property name="password" value="anaconda" />
+		<property name="username" value="${username}" />
+		<property name="url" value="${url}" />
 	</bean>
 	
 	<bean id="messageSource"  

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+    version="2.1">
+    <description>JSTL 1.1 core library</description>
+  	<display-name>JSTL core</display-name>
+  	<tlib-version>1.1</tlib-version>
+	<short-name>pagination</short-name>
+	<uri>http://dgiant.vicp.net/pagination</uri>
+	<tag>
+		<description>output the hidden elements in the query form</description>
+		<name>formHiddenElements</name>
+		<tag-class>net.vicp.dgiant.pagination.tag.FormHiddenElements</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	<tag>
+		<description>output page capacity select element</description>
+		<name>capacitySelect</name>
+		<tag-class>net.vicp.dgiant.pagination.tag.CapacitySelect</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+	      <name>pageCapacity</name>
+	      <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+	      <type>int</type>
+	    </attribute>
+	</tag>
+	<tag>
+		<description>output the form submit javascript function</description>
+	    <name>submit</name>
+	    <tag-class>net.vicp.dgiant.pagination.tag.ScriptFunction</tag-class>
+	    <body-content>JSP</body-content>
+	    <attribute>
+	      <name>formName</name>
+	      <required>true</required>
+	    </attribute>
+	</tag>
+	<tag>
+	    <description>output the pagination footer</description>
+	    <name>footer</name>
+	    <tag-class>net.vicp.dgiant.pagination.tag.Footer</tag-class>
+	    <body-content>JSP</body-content>
+	    <attribute>
+	      <name>total</name>
+	      <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+	      <type>long</type>
+	    </attribute>
+	    <attribute>
+	      <name>pageCapacity</name>
+	      <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+	      <type>int</type>
+	    </attribute>
+	    <attribute>
+	      <name>requestedPage</name>
+	      <required>true</required>
+	      <rtexprvalue>true</rtexprvalue>
+	      <type>int</type>
+	    </attribute>
+	</tag>
+</taglib> 
