@@ -51,7 +51,3 @@ task copyToLib(type: Copy) {
 }
 
 jettyRun.dependsOn(test)
-
-jettyRun.doFirst {
-	println 'http://localhost:8080/splite/main.jspa'
-}

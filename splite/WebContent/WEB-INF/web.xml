@@ -8,7 +8,7 @@
     </description>
     <display-name>splite</display-name>
     <welcome-file-list>
-        <welcome-file>main.jspa</welcome-file>
+        <welcome-file>/WEB-INF/jsp/index.jsp</welcome-file>
     </welcome-file-list>
     <context-param>
         <param-name>contextConfigLocation</param-name>
