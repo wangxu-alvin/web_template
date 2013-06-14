@@ -80,6 +80,7 @@
                 	$('#id').attr("name", "id");
                     $('#lastModified').attr("name", "lastModified");
                     $('#dlg').dialog('open').dialog('setTitle','<spring:message code="user.edit" />');  
+                    $('#fm').form('clear');
                     $('#fm').form('load',row); 
                     url = 'updateUserAsyn.jspa';  
                 } else {

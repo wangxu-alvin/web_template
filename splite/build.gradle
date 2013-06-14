@@ -49,3 +49,9 @@ task copyToLib(type: Copy) {
     into "c:/lib"
     from configurations.runtime
 }
+
+jettyRun.dependsOn(test)
+
+jettyRun.doFirst {
+	println 'http://localhost:8080/splite/main.jspa'
+}
