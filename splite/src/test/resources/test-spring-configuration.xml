@@ -20,8 +20,8 @@
 	
 	<bean id="connectionSource" class="com.j256.ormlite.jdbc.JdbcConnectionSource"
 		init-method="initialize">
-		<property name="username" value="${username}" />
 		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
 	</bean>
 	
 	<bean id="messageSource"  
