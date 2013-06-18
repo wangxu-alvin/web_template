@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: info@jeasyui.com
+ * To use it on other terms please contact us: jeasyui@gmail.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  */
@@ -35,45 +35,27 @@
 				resizeData.height = height;
 			}
 			if (resizeData.dir.indexOf('w') != -1) {
-				var width = resizeData.startWidth - e.pageX + resizeData.startX;
-				width = Math.min(
-							Math.max(width, options.minWidth),
-							options.maxWidth
-						);
-				resizeData.width = width;
-				resizeData.left = resizeData.startLeft + resizeData.startWidth - resizeData.width;
-				
-//				resizeData.width = resizeData.startWidth - e.pageX + resizeData.startX;
-//				if (resizeData.width >= options.minWidth && resizeData.width <= options.maxWidth) {
-//					resizeData.left = resizeData.startLeft + e.pageX - resizeData.startX;
-//				}
+				resizeData.width = resizeData.startWidth - e.pageX + resizeData.startX;
+				if (resizeData.width >= options.minWidth && resizeData.width <= options.maxWidth) {
+					resizeData.left = resizeData.startLeft + e.pageX - resizeData.startX;
+				}
 			}
 			if (resizeData.dir.indexOf('n') != -1) {
-				var height = resizeData.startHeight - e.pageY + resizeData.startY;
-				height = Math.min(
-							Math.max(height, options.minHeight),
-							options.maxHeight
-						);
-				resizeData.height = height;
-				resizeData.top = resizeData.startTop + resizeData.startHeight - resizeData.height;
-				
-//				resizeData.height = resizeData.startHeight - e.pageY + resizeData.startY;
-//				if (resizeData.height >= options.minHeight && resizeData.height <= options.maxHeight) {
-//					resizeData.top = resizeData.startTop + e.pageY - resizeData.startY;
-//				}
+				resizeData.height = resizeData.startHeight - e.pageY + resizeData.startY;
+				if (resizeData.height >= options.minHeight && resizeData.height <= options.maxHeight) {
+					resizeData.top = resizeData.startTop + e.pageY - resizeData.startY;
+				}
 			}
 		}
 		
 		function applySize(e){
 			var resizeData = e.data;
-			var t = $(resizeData.target);
-			t.css({
+			var target = resizeData.target;
+			$(target).css({
 				left: resizeData.left,
 				top: resizeData.top
 			});
-			if (t.outerWidth() != resizeData.width){t._outerWidth(resizeData.width)}
-			if (t.outerHeight() != resizeData.height){t._outerHeight(resizeData.height)}
-//			t._outerWidth(resizeData.width)._outerHeight(resizeData.height);
+			$(target)._outerWidth(resizeData.width)._outerHeight(resizeData.height);
 		}
 		
 		function doDown(e){

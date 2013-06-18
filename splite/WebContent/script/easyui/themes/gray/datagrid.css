@@ -99,12 +99,6 @@
   font-weight: normal;
   font-size: 12px;
 }
-.datagrid-header .datagrid-cell {
-  height: auto;
-}
-.datagrid-header .datagrid-cell span {
-  font-size: 12px;
-}
 .datagrid-cell-group {
   text-align: center;
 }

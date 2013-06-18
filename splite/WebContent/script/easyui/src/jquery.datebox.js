@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: info@jeasyui.com
+ * To use it on other terms please contact us: jeasyui@gmail.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  * 
@@ -123,12 +123,9 @@
 	
 	$.fn.datebox.methods = {
 		options: function(jq){
-			var copts = jq.combo('options');
-			return $.extend($.data(jq[0], 'datebox').options, {
-				originalValue: copts.originalValue,
-				disabled: copts.disabled,
-				readonly: copts.readonly
-			});
+			var opts = $.data(jq[0], 'datebox').options;
+			opts.originalValue = jq.combo('options').originalValue;
+			return opts;
 		},
 		calendar: function(jq){	// get the calendar object
 			return $.data(jq[0], 'datebox').calendar;

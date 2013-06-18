@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: info@jeasyui.com
+ * To use it on other terms please contact us: jeasyui@gmail.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  */
@@ -150,12 +150,13 @@
 		 * check the checkbox and radio fields
 		 */
 		function _checkField(name, val){
-			var rr = $(target).find('input[name="'+name+'"][type=radio], input[name="'+name+'"][type=checkbox]');
-			rr._propAttr('checked', false);
+			var form = $(target);
+			var rr = $('input[name="'+name+'"][type=radio], input[name="'+name+'"][type=checkbox]', form);
+			$.fn.prop ? rr.prop('checked',false) : rr.attr('checked',false);
 			rr.each(function(){
 				var f = $(this);
-				if (f.val() == String(val) || $.inArray(f.val(), val) >= 0){
-					f._propAttr('checked', true);
+				if (f.val() == String(val)){
+					$.fn.prop ? f.prop('checked',true) : f.attr('checked',true);
 				}
 			});
 			return rr;

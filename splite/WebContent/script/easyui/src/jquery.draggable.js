@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: info@jeasyui.com
+ * To use it on other terms please contact us: jeasyui@gmail.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  */
@@ -234,8 +234,8 @@
 							top:e.data.startTop
 						});
 					}
-					$(this).trigger('_drop', [e.data.target]);
 					removeProxy();
+					$(this).trigger('_drop', [e.data.target]);
 					dropped = true;
 					this.entered = false;
 					return false;
@@ -385,34 +385,4 @@
 		onDrag: function(e){},
 		onStopDrag: function(e){}
 	};
-	
-	$(function(){
-		function touchHandler(e) {
-			var touches = e.changedTouches, first = touches[0], type = "";
-
-			switch(e.type) {
-				case "touchstart": type = "mousedown"; break;
-				case "touchmove":  type = "mousemove"; break;        
-				case "touchend":   type = "mouseup";   break;
-				default: return;
-			}
-			var simulatedEvent = document.createEvent("MouseEvent");
-			simulatedEvent.initMouseEvent(type, true, true, window, 1,
-									  first.screenX, first.screenY,
-									  first.clientX, first.clientY, false,
-									  false, false, false, 0/*left*/, null);
-
-			first.target.dispatchEvent(simulatedEvent);
-			if (isDragging){
-				e.preventDefault();
-			}
-		}
-		
-		if (document.addEventListener){
-			document.addEventListener("touchstart", touchHandler, true);
-			document.addEventListener("touchmove", touchHandler, true);
-			document.addEventListener("touchend", touchHandler, true);
-			document.addEventListener("touchcancel", touchHandler, true); 
-		}
-	});
 })(jQuery);

@@ -1,10 +1,10 @@
 ﻿/**
- * jQuery EasyUI 1.3.3
+ * jQuery EasyUI 1.3.2
  * 
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: info@jeasyui.com
+ * To use it on other terms please contact us: jeasyui@gmail.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  *
@@ -28,6 +28,9 @@ _6(_4[i]);
 function _5(_7){
 var _8=[];
 _7.addClass("menu");
+if(!_7[0].style.width){
+_7[0].autowidth=true;
+}
 _8.push(_7);
 if(!_7.hasClass("menu-content")){
 _7.children("div").each(function(){
@@ -43,54 +46,51 @@ _8=_8.concat(mm);
 return _8;
 };
 function _6(_a){
-var _b=$.parser.parseOptions(_a[0],["width"]).width;
-if(_a.hasClass("menu-content")){
-_a[0].originalWidth=_b||_a._outerWidth();
-}else{
-_a[0].originalWidth=_b||0;
+if(!_a.hasClass("menu-content")){
 _a.children("div").each(function(){
-var _c=$(this);
-if(_c.hasClass("menu-sep")){
+var _b=$(this);
+if(_b.hasClass("menu-sep")){
 }else{
-var _d=$.extend({},$.parser.parseOptions(this,["name","iconCls","href"]),{disabled:(_c.attr("disabled")?true:undefined)});
-_c.attr("name",_d.name||"").attr("href",_d.href||"");
-var _e=_c.addClass("menu-item").html();
-_c.empty().append($("<div class=\"menu-text\"></div>").html(_e));
-if(_d.iconCls){
-$("<div class=\"menu-icon\"></div>").addClass(_d.iconCls).appendTo(_c);
+var _c=$.extend({},$.parser.parseOptions(this,["name","iconCls","href"]),{disabled:(_b.attr("disabled")?true:undefined)});
+_b.attr("name",_c.name||"").attr("href",_c.href||"");
+var _d=_b.addClass("menu-item").html();
+_b.empty().append($("<div class=\"menu-text\"></div>").html(_d));
+if(_c.iconCls){
+$("<div class=\"menu-icon\"></div>").addClass(_c.iconCls).appendTo(_b);
 }
-if(_d.disabled){
-_f(_2,_c[0],true);
+if(_c.disabled){
+_e(_2,_b[0],true);
 }
-if(_c[0].submenu){
-$("<div class=\"menu-rightarrow\"></div>").appendTo(_c);
+if(_b[0].submenu){
+$("<div class=\"menu-rightarrow\"></div>").appendTo(_b);
 }
-_10(_2,_c);
+_b._outerHeight(22);
+_f(_2,_b);
 }
 });
 $("<div class=\"menu-line\"></div>").prependTo(_a);
 }
-_11(_2,_a);
+_10(_2,_a);
 _a.hide();
-_12(_2,_a);
+_11(_2,_a);
 };
 };
-function _11(_13,_14){
-var _15=$.data(_13,"menu").options;
-var d=_14.css("display");
-_14.css({display:"block",left:-10000});
-_14.find("div.menu-item")._outerHeight(22);
+function _10(_12,_13){
+var _14=$.data(_12,"menu").options;
+var d=_13.css("display");
+_13.css({display:"block",left:-10000});
+var _15=_13._outerWidth();
 var _16=0;
-_14.find("div.menu-text").each(function(){
+_13.find("div.menu-text").each(function(){
 if(_16<$(this)._outerWidth()){
 _16=$(this)._outerWidth();
 }
 });
 _16+=65;
-_14._outerWidth(Math.max((_14[0].originalWidth||0),_16,_15.minWidth));
-_14.css("display",d);
+_13._outerWidth(Math.max(_15,_16,_14.minWidth));
+_13.css("display",d);
 };
-function _12(_17,_18){
+function _11(_17,_18){
 var _19=$.data(_17,"menu");
 _18.unbind(".menu").bind("mouseenter.menu",function(){
 if(_19.timer){
@@ -103,7 +103,7 @@ _1a(_17);
 },100);
 });
 };
-function _10(_1b,_1c){
+function _f(_1b,_1c){
 _1c.unbind(".menu");
 _1c.bind("click.menu",function(){
 if($(this).hasClass("menu-item-disabled")){
@@ -244,7 +244,7 @@ _31($(_2e));
 tmp.remove();
 return _30;
 };
-function _f(_34,_35,_36){
+function _e(_34,_35,_36){
 var t=$(_35);
 if(_36){
 t.addClass("menu-item-disabled");
@@ -265,6 +265,7 @@ var _3a=$(_38);
 if(_39.parent){
 if(!_39.parent.submenu){
 var _3b=$("<div class=\"menu\"><div class=\"menu-line\"></div></div>").appendTo("body");
+_3b[0].autowidth=true;
 _3b.hide();
 _39.parent.submenu=_3b;
 $("<div class=\"menu-rightarrow\"></div>").appendTo(_39.parent);
@@ -295,12 +296,12 @@ _3c[0].onclick=eval(_39.onclick);
 if(_39.handler){
 _3c[0].onclick=eval(_39.handler);
 }
-_10(_38,_3c);
+_f(_38,_3c);
 if(_39.disabled){
-_f(_38,_3c[0],true);
+_e(_38,_3c[0],true);
 }
-_12(_38,_3a);
 _11(_38,_3a);
+_10(_38,_3a);
 };
 function _3d(_3e,_3f){
 function _40(el){
@@ -397,11 +398,11 @@ _3d(this,_4f);
 });
 },enableItem:function(jq,_50){
 return jq.each(function(){
-_f(this,_50,false);
+_e(this,_50,false);
 });
 },disableItem:function(jq,_51){
 return jq.each(function(){
-_f(this,_51,true);
+_e(this,_51,true);
 });
 }};
 $.fn.menu.parseOptions=function(_52){

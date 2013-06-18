@@ -7,7 +7,7 @@
 		<title>Insert title here</title>
 		<link rel="stylesheet" type="text/css" href="script/easyui/themes/default/easyui.css">
 		<link rel="stylesheet" type="text/css" href="script/easyui/themes/icon.css">
-		<script type="text/javascript" src="script/easyui/jquery.min.js"></script>
+		<script type="text/javascript" src="script/easyui/jquery-1.8.0.min.js"></script>
 		<script type="text/javascript" src="script/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="script/easyui/locale/easyui-lang-${pageContext.response.locale}.js"></script>
 	</head>

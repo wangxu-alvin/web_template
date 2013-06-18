@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: info@jeasyui.com
+ * To use it on other terms please contact us: jeasyui@gmail.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  * 
@@ -36,9 +36,8 @@
 	 * set the slider size, for vertical slider, the height property is required
 	 */
 	function setSize(target, param){
-		var state = $.data(target, 'slider');
-		var opts = state.options;
-		var slider = state.slider;
+		var opts = $.data(target, 'slider').options;
+		var slider = $.data(target, 'slider').slider;
 		
 		if (param){
 			if (param.width) opts.width = param.width;
@@ -67,9 +66,8 @@
 	 * show slider rule if needed
 	 */
 	function showRule(target){
-		var state = $.data(target, 'slider');
-		var opts = state.options;
-		var slider = state.slider;
+		var opts = $.data(target, 'slider').options;
+		var slider = $.data(target, 'slider').slider;
 		
 		var aa = opts.mode == 'h' ? opts.rule : opts.rule.slice(0).reverse();
 		if (opts.reversed){
@@ -111,9 +109,8 @@
 	 * build the slider and set some properties
 	 */
 	function buildSlider(target){
-		var state = $.data(target, 'slider');
-		var opts = state.options;
-		var slider = state.slider;
+		var opts = $.data(target, 'slider').options;
+		var slider = $.data(target, 'slider').slider;
 		
 		slider.removeClass('slider-h slider-v slider-disabled');
 		slider.addClass(opts.mode == 'h' ? 'slider-h' : 'slider-v');
@@ -163,9 +160,8 @@
 	 * set a specified value to slider
 	 */
 	function setValue(target, value){
-		var state = $.data(target, 'slider');
-		var opts = state.options;
-		var slider = state.slider;
+		var opts = $.data(target, 'slider').options;
+		var slider = $.data(target, 'slider').slider;
 		var oldValue = opts.value;
 		if (value < opts.min) value = opts.min;
 		if (value > opts.max) value = opts.max;
@@ -210,9 +206,8 @@
 	 * translate value to slider position
 	 */
 	function value2pos(target, value){
-		var state = $.data(target, 'slider');
-		var opts = state.options;
-		var slider = state.slider;
+		var opts = $.data(target, 'slider').options;
+		var slider = $.data(target, 'slider').slider;
 		if (opts.mode == 'h'){
 			var pos = (value-opts.min)/(opts.max-opts.min)*slider.width();
 			if (opts.reversed){
@@ -231,9 +226,8 @@
 	 * translate slider position to value
 	 */
 	function pos2value(target, pos){
-		var state = $.data(target, 'slider');
-		var opts = state.options;
-		var slider = state.slider;
+		var opts = $.data(target, 'slider').options;
+		var slider = $.data(target, 'slider').slider;
 		if (opts.mode == 'h'){
 			var value = opts.min + (opts.max-opts.min)*(pos/slider.width());
 		} else {
@@ -259,13 +253,6 @@
 				});
 				$(this).removeAttr('disabled');
 			}
-			
-			var opts = state.options;
-			opts.min = parseFloat(opts.min);
-			opts.max = parseFloat(opts.max);
-			opts.value = parseFloat(opts.value);
-			opts.step = parseFloat(opts.step);
-			
 			buildSlider(this);
 			showRule(this);
 			setSize(this);

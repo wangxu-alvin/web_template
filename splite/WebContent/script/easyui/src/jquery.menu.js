@@ -4,7 +4,7 @@
  * Copyright (c) 2009-2013 www.jeasyui.com. All rights reserved.
  *
  * Licensed under the GPL or commercial licenses
- * To use it on other terms please contact us: info@jeasyui.com
+ * To use it on other terms please contact us: jeasyui@gmail.com
  * http://www.gnu.org/licenses/gpl.txt
  * http://www.jeasyui.com/license_commercial.php
  */
@@ -32,6 +32,9 @@
 		function splitMenu(menu){
 			var menus = [];
 			menu.addClass('menu');
+			if (!menu[0].style.width){
+				menu[0].autowidth = true;
+			}
 			menus.push(menu);
 			if (!menu.hasClass('menu-content')){
 				menu.children('div').each(function(){
@@ -48,11 +51,7 @@
 		}
 		
 		function createMenu(menu){
-			var width = $.parser.parseOptions(menu[0], ['width']).width;
-			if (menu.hasClass('menu-content')){
-				menu[0].originalWidth = width || menu._outerWidth();
-			} else {
-				menu[0].originalWidth = width || 0;
+			if (!menu.hasClass('menu-content')){
 				menu.children('div').each(function(){
 					var item = $(this);
 					if (item.hasClass('menu-sep')){
@@ -75,6 +74,7 @@
 							$('<div class="menu-rightarrow"></div>').appendTo(item);	// has sub menu
 						}
 						
+						item._outerHeight(22);
 						bindMenuItemEvent(target, item);
 					}
 				});
@@ -95,15 +95,15 @@
 			left:-10000
 		});
 		
-		menu.find('div.menu-item')._outerHeight(22);
-		var width = 0;
+		var width = menu._outerWidth();
+		var autoWidth = 0;
 		menu.find('div.menu-text').each(function(){
-			if (width < $(this)._outerWidth()){
-				width = $(this)._outerWidth();
+			if (autoWidth < $(this)._outerWidth()){
+				autoWidth = $(this)._outerWidth();
 			}
 		});
-		width += 65;
-		menu._outerWidth(Math.max((menu[0].originalWidth || 0), width, opts.minWidth));
+		autoWidth += 65;
+		menu._outerWidth(Math.max(width, autoWidth, opts.minWidth));
 		
 		menu.css('display', d);
 	}
@@ -318,6 +318,7 @@
 		if (param.parent){
 			if (!param.parent.submenu){
 				var submenu = $('<div class="menu"><div class="menu-line"></div></div>').appendTo('body');
+				submenu[0].autowidth = true;
 				submenu.hide();
 				param.parent.submenu = submenu;
 				$('<div class="menu-rightarrow"></div>').appendTo(param.parent);

@@ -4,10 +4,8 @@
 .datebox-button {
   height: 18px;
   padding: 2px 5px;
-  text-align: center;
-}
-.datebox-button a {
   font-size: 12px;
+  text-align: center;
 }
 .datebox-current,
 .datebox-close,
